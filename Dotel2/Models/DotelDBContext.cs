@@ -25,6 +25,9 @@ namespace Dotel2.Models
         public virtual DbSet<Sponsorship> Sponsorships { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
+        public DbSet<MemberShipType> MembershipTypes { get; set; }
+        public DbSet<UserMembership> UserMemberships { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
