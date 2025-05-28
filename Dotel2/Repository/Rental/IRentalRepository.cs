@@ -35,7 +35,7 @@ namespace Dotel2.Repository.Rental
         public List<Dotel2.Models.Rental> getFilterRentalPaging(string? location, string? type, decimal? maxSquare,
             decimal? minSquare, decimal? minPrice, decimal? maxPrice);
 
-
+        public List<String> getSuggestLocation(string query);
 
     }
 }

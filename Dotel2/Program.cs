@@ -11,6 +11,7 @@ builder.Services.AddDbContext<DotelDBContext>();
 builder.Services.AddSession();
 builder.Services.AddScoped<IRentalRepository, RentalRepostiory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -33,5 +34,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.MapControllers();
 
 app.Run();

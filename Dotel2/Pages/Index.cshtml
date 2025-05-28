@@ -33,7 +33,8 @@
                         <div class="row g-2">
                             <div class="col-md-2">
                                 <div>
-                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Địa điểm" asp-for="Location" id="location">
+                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Địa điểm" asp-for="Location" id="location" autocomplete="off">
+                                    <ul id="suggest-location" class="list-group position-absolute z-3 " style="display: none"></ul>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -206,9 +207,40 @@
         </div>
         </div> *@
         <!-- Testimonial End -->
-
+        
 
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("location");
+            const suggestList = document.getElementById("suggest-location");
+            input.addEventListener("input", async function () {
+                const querySearch = input.value;
+                if (querySearch.length < 2) {
+                    suggestList.style.display = "none";
+                    return;
+                }
+                const responseData = await fetch(`/api/LocationSearch?query=${querySearch}`);
+                const suggestions = await responseData.json();
+                suggestList.innerHTML = "";
+                if (suggestions.length > 0) {
+                    suggestions.foreach(loc => {
+                        const li = document.createElement("li");
+                        li.classList.add("list-group-item");
+                        li.textContent = loc;
+                        li.onclick = () => {
+                            input.value = loc;
+                            suggestList.style.display = "none";
+                        };
+                        suggestList.appendChild(li);
+                    });
+
+                } else {
+                    suggestList.style.display = "none";
+                }
+            });
+        });
+    </script>
 
 
     <!-- JavaScript Libraries -->

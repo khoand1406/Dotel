@@ -78,14 +78,14 @@ namespace EXE_Dotel.Repository.Rental
             return rentals;
         }
 
-        public List<Dotel2.Models.Rental> getFilterRentalPaging(string? location, string? type, decimal? maxSquare, decimal? minSquare, decimal? minPrice,decimal? maxPrice)
+        public List<Dotel2.Models.Rental> getFilterRentalPaging(string? location, string? type, decimal? maxSquare, decimal? minSquare, decimal? minPrice, decimal? maxPrice)
         {
             List<Dotel2.Models.Rental> rentals = dBContext.Rentals.Include(e => e.RentalListImages).Where(e =>
                     (string.IsNullOrEmpty(location) || e.Location.Contains(location)) &&
                     (string.IsNullOrEmpty(type) || e.Type.Equals(type)) &&
-                    (!minSquare.HasValue || e.RoomArea >= minSquare) && 
+                    (!minSquare.HasValue || e.RoomArea >= minSquare) &&
                     (maxSquare == null || e.RoomArea <= maxSquare) &&
-                    (minPrice == null || e.Price >= minPrice) && 
+                    (minPrice == null || e.Price >= minPrice) &&
                     (maxPrice == null || e.Price <= maxPrice)
             ).ToList();
 
@@ -104,7 +104,7 @@ namespace EXE_Dotel.Repository.Rental
 
             var rental = dBContext.Rentals
                                  .Include(r => r.RentalListImages)
-                                 .Include(r=> r.RentalVideos).AsSplitQuery()
+                                 .Include(r => r.RentalVideos).AsSplitQuery()
                                  .FirstOrDefault(r => r.RentalId == rentalId);
 
             if (rental == null)
@@ -126,8 +126,8 @@ namespace EXE_Dotel.Repository.Rental
 
             return dBContext.Rentals
             .Include(r => r.RentalListImages)
-            .OrderByDescending(r=>r.ViewNumber)
-            .Where(rental=>rental.Approval==true)
+            .OrderByDescending(r => r.ViewNumber)
+            .Where(rental => rental.Approval == true)
             .Take(pagesize)
             .ToList();
             ;
@@ -142,20 +142,20 @@ namespace EXE_Dotel.Repository.Rental
         {
             return dBContext.Rentals.Include(r => r.RentalListImages)
                                     .Include(rental => rental.RentalVideos).AsSplitQuery()
-                                    .FirstOrDefault(rental=> rental.RentalId==rentalId);
+                                    .FirstOrDefault(rental => rental.RentalId == rentalId);
         }
 
         public List<Dotel2.Models.Rental> getRentersPaging(List<Dotel2.Models.Rental> rentals, int page, int pageSize)
         {
             return rentals
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize).OrderBy(re=>re.Price).Where(rental=> rental.Approval==true)
+                .Take(pageSize).OrderBy(re => re.Price).Where(rental => rental.Approval == true)
                 .ToList();
         }
 
         public void getViewCountIncrease(Dotel2.Models.Rental rental)
         {
-            if(rental == null) return;
+            if (rental == null) return;
             else
             {
                 rental.ViewNumber += 1;
@@ -166,6 +166,18 @@ namespace EXE_Dotel.Repository.Rental
         {
             var rentals = dBContext.Rentals.Where(r => r.Approval).ToList();
             return rentals;
+        }
+
+        public List<string> getSuggestLocation(string query)
+        {
+            return dBContext.Rentals
+            .Where(r => r.Location != null && r.Location.Contains(query))
+            .Select(r => r.Location!)
+            .Distinct()
+            .Take(10)
+            .ToList();
+            
+
         }
     }
 }
