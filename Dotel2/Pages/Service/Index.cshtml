@@ -1,0 +1,556 @@
+﻿@page
+@model ServiceModel;
+@using Dotel2.Pages.Shared
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper , Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Dotel2
+@{
+    Layout = "Shared/_Layout2";
+}
+
+
+    <title>Dịch vụ</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .carousel-item img {
+            margin: 0 auto;
+            /* this will align the image to center. */
+            width: auto;
+            /* for those images which don't have a width specified, but has a max-height will be auto adjusted */
+        }
+    </style>
+
+<body>
+    <div <div class="container">
+        <h1 class="my-4">Dịch vụ đặt xe</h1>
+        <div class="row">
+            <!-- Nhà cung cấp dịch vụ thuê xe 1 -->
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-1" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/1/1.jpg" alt="Image">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-1" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-1" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Luân Hoàng</h5>
+                        <p class="card-text">SĐT: 0967880366</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-2" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/2/1.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/2/2.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/2/3.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-2" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-2" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Thai Nguyenkhac</h5>
+                        <p class="card-text">SĐT: 0917543996</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-3" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/3/1.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/3/2.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/3/3.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-3" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-3" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Thanh Hải</h5>
+                        <p class="card-text">SĐT: 0975379965</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-4" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/4/1.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/4/2.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/4/3.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/4/4.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-4" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-4" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Nguyễn Dũng</h5>
+                        <p class="card-text">SĐT: 0983587177</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-5" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/5/1.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/5/2.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-5" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-5" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Phùng Hùng</h5>
+                        <p class="card-text">SĐT: 0869399285</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-6" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/6/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-6" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-6" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Kiều Hải</h5>
+                        <p class="card-text">SĐT: 0969856262</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-7" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/7/1.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/7/2.jpg">
+                            </div>
+                            <div class="carousel-item">
+                                <img height="300" class="d-block" src="/img/service/7/3.jpg">
+                            </div>
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/7/4.jpg">
+                            </div>
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/7/5.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-7" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-7" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Tình Bùi</h5>
+                        <p class="card-text">SĐT: 0587246246</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-8" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/8/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-8" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-8" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Trần Văn Tài</h5>
+                        <p class="card-text">SĐT: 0348430888</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-9" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/9/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-1" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-1" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng đài taxi Thạch Thất</h5>
+                        <p class="card-text">SĐT: 0375870866</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-10" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/10/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-10" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-10" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Ngô Thăng</h5>
+                        <p class="card-text">SĐT: 0973819123</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-11" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/11/1.jpg" />
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-11" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-11" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Nguyễn Tuấn Anh</h5>
+                        <p class="card-text">SĐT: 0976382866</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-20" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/20/1.jpg" />
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-20" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-20" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Taxi Phạm Hùng</h5>
+                        <p class="card-text">SĐT: 0968255583</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+        <h1 class="my-4">Dịch vụ giặt là</h1>
+        <div class="row">
+            <!-- Nhà cung cấp dịch vụ giặt là 1 -->
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-12" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/12/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-12" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-12" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Giặt là Bảo Lê</h5>
+                        <p class="card-text">SĐT: 0392437027</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-13" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/13/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-13" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-13" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Giặt là An Vy</h5>
+                        <p class="card-text">SĐT: 0945509918</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-14" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/14/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-14" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-14" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Giặt là Nguyễn Lâm</h5>
+                        <p class="card-text">SĐT: 0966965088</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="my-4">Dịch vụ chuyển đồ</h1>
+        <div class="row">
+            <!-- Nhà cung cấp dịch vụ chuyển đồ 1 -->
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-15" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/15/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-15" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-15" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Chuyển đồ Trương Trung Hiếu</h5>
+                        <p class="card-text">SĐT: 0967569690</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-16" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/16/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-16" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-16" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Xe tải Long</h5>
+                        <p class="card-text">SĐT: 0984601982</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-17" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/17/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-1" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-1" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Chuyển đồ Bùi Quang Tuấn</h5>
+                        <p class="card-text">SĐT: 0973298043</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-18" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/18/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-1" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-1" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Xe tải Xuân Quân</h5>
+                        <p class="card-text">SĐT: 0338367368</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 service-card">
+                <div class="card">
+                    <div id="carousel-rental-19" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img height="300" class="d-block" src="/img/service/19/1.jpg">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-rental-19" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-rental-19" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Chuyển đồ Anh Khuê</h5>
+                        <p class="card-text">SĐT: 0979054833</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>

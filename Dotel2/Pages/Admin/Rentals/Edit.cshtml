@@ -1,0 +1,99 @@
+﻿@page "{id:int}"
+@model Dotel2.Pages.Admin.Rentals.EditModel
+@{
+    ViewData["Title"] = "Edit Rental";
+}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"]</title>
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="~/css/site.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="mt-4">@ViewData["Title"]</h1>
+        <form method="post">
+            <div class="form-group">
+                <label for="RentalId">Id Trọ</label>
+                <input type="text" class="form-control" name="EditRental.RentalId" value="@Model.EditRental.RentalId" readonly />
+            </div>
+            <div class="form-group">
+                <label for="UserId">Id chủ trọ</label>
+                <input type="text" class="form-control" name="EditRental.UserId" value="@Model.EditRental.UserId" readonly />
+            </div>
+            <div class="form-group">
+                <label for="RentalTitle">Tên trọ</label>
+                <input type="text" class="form-control" id="RentalTitle" name="EditRental.RentalTitle" value="@Model.EditRental.RentalTitle" required />
+            </div>
+            <div class="form-group">
+                <label for="Description">Mô tả</label>
+                <textarea class="form-control" id="Description" name="EditRental.Description" required>@Model.EditRental.Description</textarea>
+            </div>
+            <div class="form-group">
+                <label for="Price">Giá</label>
+                <input type="text" class="form-control" id="Price" name="EditRental.Price" value="@Model.EditRental.Price"/>
+            </div>
+            <div class="form-group">
+                <label for="RoomArea">Diện tích</label>
+                <input type="number" class="form-control" id="RoomArea" name="EditRental.RoomArea" value="@Model.EditRental.RoomArea" step="0.01" />
+            </div>
+            <div class="form-group">
+                <label for="MaxPeople">Số người tối đa</label>
+                <input type="number" class="form-control" id="MaxPeople" name="EditRental.MaxPeople" value="@Model.EditRental.MaxPeople" />
+            </div>
+            <div class="form-group">
+                <label for="ContactPhoneNumber">Sđt Liên hệ</label>
+                <input type="text" class="form-control" id="ContactPhoneNumber" name="EditRental.ContactPhoneNumber" value="@Model.EditRental.ContactPhoneNumber" />
+            </div>
+            <div class="form-group">
+                <label for="ViewNumber">Lượt xem</label>
+                <input type="number" class="form-control" id="ViewNumber" name="EditRental.ViewNumber" value="@Model.EditRental.ViewNumber" />
+            </div>
+            <div class="form-group">
+                <label for="Bathroom">Có phòng tắm?</label>
+                <input type="checkbox" id="Bathroom" name="EditRental.Bathroom" value="true" @(Model.EditRental.Bathroom == true ? "checked" : "") />
+            </div>
+            <div class="form-group">
+                <label for="Kitchen">Có bếp?</label>
+                <input type="checkbox" id="Kitchen" name="EditRental.Kitchen" value="true" @(Model.EditRental.Kitchen == true ? "checked" : "") />
+            </div>
+            <div class="form-group">
+                <label for="BedroomNumber">Số phòng ngủ</label>
+                <input type="number" class="form-control" id="BedroomNumber" name="EditRental.BedroomNumber" value="@Model.EditRental.BedroomNumber" />
+            </div>
+            <div class="form-group">
+                <label for="Location">Địa chỉ</label>
+                <input type="text" class="form-control" id="Location" name="EditRental.Location" value="@Model.EditRental.Location" />
+            </div>
+            <div class="form-group">
+                <label for="GoogleMap">Google Map</label>
+                <input type="text" class="form-control" id="GoogleMap" name="EditRental.GoogleMap" value="@Model.EditRental.GoogleMap" />
+            </div>
+            <div class="form-group">
+                <label for="Approval">Được duyệt</label>
+                <input type="checkbox" id="Approval" name="EditRental.Approval" value="true" @(Model.EditRental.Approval == true ? "checked" : "") />
+            </div>
+            <div class="form-group">
+                <label for="Status">Ban?</label>
+                <input type="checkbox" id="Status" name="EditRental.Status" value="true" @(Model.EditRental.Status == true ? "checked" : "") />
+            </div>
+            <div class="form-group">
+                <label for="Type">Loại</label>
+                <input type="text" class="form-control" id="Type" name="EditRental.Type" value="@Model.EditRental.Type" />
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-page="/Admin/Rentals/Index" class="btn btn-secondary">Cancel</a>
+        </form>
+        </div>
+        <br/>
+        <div class="container">
+            <div class="form-group">
+                <a href="/Admin/Rentals/ViewImages/@Model.EditRental.RentalId" class="btn btn-info">Xem ảnh</a>
+            </div>
+        </div>
+        
+    </body>
+</html>

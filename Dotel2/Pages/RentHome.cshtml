@@ -1,0 +1,218 @@
+﻿@page
+@model Dotel2.Pages.RentHomeModel
+@{
+    Layout = "Shared/_Layout2";
+}
+
+
+<body>
+    <style>
+        .rental-card-img {
+            height: 200px; /* Set the desired fixed height */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+        }
+    </style>
+
+
+
+    <!-- Filter Start -->
+    <div class="container-fluid booking pb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="bg-white shadow" style="padding: 35px;">
+
+                <form method="post" asp-page-handler="Index" class="row g-2" id="filterForm">
+                    <div class="col-md-10">
+
+                        <div class="row g-2">
+                            <div class="col-md-2">
+                                <div>
+                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Địa điểm" asp-for="Location" id="location">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" asp-for="Type" id="housingType">
+                                    <option selected value="">Loại hình nhà ở</option>
+                                    <option value="Nha">Nhà trọ</option>
+                                    <option value="Chung cu">Chung cư</option>
+                                    <option value="Nha nguyen can">Nhà nguyên căn</option>
+                                    <option value="Homestay">Homestay</option>
+                                    <option value="Chung cu mini">Chung cư mini</option>
+
+                                    <option value="Chung cu cao cap">Chung cư cao cấp</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <div>
+                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Diên tích nhỏ nhất" asp-for="MinArea" >
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div>
+                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Diện tích lớn nhất" asp-for="MaxArea">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div>
+                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Giá thấp nhất" asp-for="MinPrice">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div>
+                                    <input class="form-select" style="background-image: none;" type="text" placeholder="Giá cao nhất" asp-for="MaxPrice">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" typw="Submit">Tìm kiếm</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Filter End -->
+    <!-- Booking Start -->
+    <div class="container-xxl">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h4 class="section-title text-center text-primary text-uppercase">Dotel</h4>
+                <h1>TÌM KIẾM <span class="text-primary text-uppercase">nhà ở</span></h1>
+            </div>
+
+            <!-- Hot Room start -->
+
+            <div class="col-12">
+                <div class="row gy-4">
+                    <div class="col-md-4">
+                        <h4 class="section-title text-start text-primary text-uppercase">Tin nổi bật</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-xxl py-5">
+                <div class="container">
+
+                    <div id="HotNews" class="row g-4">
+                        @foreach (var rental in Model.FilteredRenter)
+                        {
+                            <div class="col-md-4">
+                                <div class="card">
+                                    @if (rental.RentalListImages.Count > 0)
+                                    {
+                                        <img src="@rental.RentalListImages.FirstOrDefault().Sourse" class="card-img-top rental-card-img " alt="...">
+
+                                    }
+                                    <div class="card-body">
+                                        <h5 class="card-title">@rental.RentalTitle</h5>
+                                        <p class="card-text"><small class="text-muted">Price: @rental.Price.ToString("N0")</small></p>
+                                        <p class="btn-delete-card-icon"><i class="bi bi-eye-fill"></i><small class="text-muted"> @rental.ViewNumber</small></p>
+                                        <form method="post" asp-page-handler="IncrementViewCount">
+                                            <input type="hidden" name="rentalId" value="@rental.RentalId" />
+                                            
+                                            <button type="submit" class="btn btn-primary">View Detail</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            @if (Model.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a asp-page="RentHome"
+                                       asp-route-Location="@Model.Location"
+                                       asp-route-Type="@Model.Type"
+                                       asp-route-MinArea="@Model.MinArea"
+                                       asp-route-MaxArea="@Model.MaxArea"
+                                       asp-route-MinPrice="@Model.MinPrice"
+                                       asp-route-MaxPrice="@Model.MaxPrice"
+                                       asp-route-CurrentPage="@(Model.CurrentPage - 1)"
+                                       class="page-link">Previous</a>
+                                </li>
+
+                            }
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item">
+                                    <a asp-page="RentHome"
+                                       asp-route-Location="@Model.Location"
+                                       asp-route-Type="@Model.Type"
+                                       asp-route-MinArea="@Model.MinArea"
+                                       asp-route-MaxArea="@Model.MaxArea"
+                                       asp-route-MinPrice="@Model.MinPrice"
+                                       asp-route-MaxPrice="@Model.MaxPrice"
+                                       asp-route-CurrentPage="@i"
+                                       class="page-link">@i</a>
+                                </li>
+
+                            }
+                            @if (Model.CurrentPage < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a asp-page="RentHome"
+                                       asp-route-Location="@Model.Location"
+                                       asp-route-Type="@Model.Type"
+                                       asp-route-MinArea="@Model.MinArea"
+                                       asp-route-MaxArea="@Model.MaxArea"
+                                       asp-route-MinPrice="@Model.MinPrice"
+                                       asp-route-MaxPrice="@Model.MaxPrice"
+                                       asp-route-CurrentPage="@(Model.CurrentPage + 1)"
+                                       class="page-link">Next</a>
+                                </li>
+
+                            }
+
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Hot Room End -->
+            <!-- Normal Room start -->
+
+            <div class="col-12">
+                <div class="row gy-4">
+                    <div class="col-md-4">
+                        <h4 class="section-title text-start text-primary text-uppercase">Bản tin gần đây</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-xxl py-5">
+                <div class="container">
+
+                    <div id="NormalNews" class="row g-4">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking End -->
+
+
+        </div>
+    </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script src="js/IndexPage.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="js/IndexPage.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>

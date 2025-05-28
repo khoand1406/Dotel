@@ -1,0 +1,78 @@
+﻿@page
+@model Dotel2.Pages.Admin.Rentals.RentalModel;
+@{
+    ViewData["Title"] = "Danh sách trọ";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] </title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">
+            @ViewData["Title"]
+        </h1>
+        <div>
+            <form method="post">
+                <div class="form-group"
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="approvedOnly" asp-for="ApprovedOnly"/>
+                    <label class="form-check-lable" for="approvedOnly"> Trọ đã duyệt </label>
+                </div>
+            </div>
+                <button type="submit" class="btn btn-primary">Lọc</button>
+            </form>
+        </div>
+        <div>
+
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tên trọ</th>
+                    <th>Mô tả</th>
+                    <th>Giá</th>
+                    <th>Diện tích</th>
+                    <th>Số người tối đa</th>
+                    <th>Sđt Liên hệ</th>
+                    <th>Chủ trọ</th>
+                    <th>Địa chỉ</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Rentals != null)
+                {
+                    foreach (var rental in Model.Rentals)
+                    {
+                        <tr>
+                            <td>@rental.RentalId</td>
+                            <td>@rental.RentalTitle</td>
+                            <td>@rental.Description</td>
+                            <td>@rental.Price</td>
+                            <td>@rental.RoomArea</td>
+                            <td>@rental.MaxPeople</td>
+                            <td>@rental.ContactPhoneNumber</td>
+                            <td>@rental.UserId</td>
+                            <td>@rental.Location</td>
+                            <td>@(rental.Approval ? "Đã duyệt" : "Chưa duyệt")</td>
+                            <td>
+                                <a asp-page="/Admin/Rentals/Edit" asp-route-id="@rental.RentalId">Edit</a>
+                                <a asp-page="/Admin/Rentals/Delete" asp-route-id="@rental.RentalId">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</body>
+</html>

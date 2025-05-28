@@ -1,0 +1,306 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using Dotel2.Models
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var userSession = HttpContextAccessor.HttpContext?.Session.GetString("userSession");
+    int UserId = 0;
+    if (!string.IsNullOrEmpty(Context.Session.GetString("userJson")))
+    {
+        User User = JsonConvert.DeserializeObject<User>(Context.Session.GetString("userJson"));
+        UserId = User.UserId;
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dotel Cung cấp dịch vụ tìm kiếm nhà trọ</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Cung cấp nhà trọ cho mọi người trên địa bàn Hòa Lạc" name="keywords">
+    <meta content="" name="description">
+    <link rel="icon" href="/img/index_img/Logo.png">
+    <title>@ViewData["Title"] - Dotel2</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7PRS9560HY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-7PRS9560HY');
+    </script><!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7PRS9560HY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-7PRS9560HY');
+    </script>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- link fontawesome -->
+    <script src="https://kit.fontawesome.com/71fcac199f.js" crossorigin="anonymous"></script>
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+        <!-- Header Start -->
+        <div class="container-fluid nav-bar bg-transparent" style="background-color: #0F172B;">
+            <nav class="navbar navbar-expand-lg  navbar-light py-0 px-4" style="background-color: #0F172B;">
+                <a href="/Index" class="navbar-brand d-flex align-items-center text-center">
+                    <div class="icon p-2 me-2">
+                        <img class="img-fluid" src="~/img/index_img/Logo.png" alt="Icon" style="width: 100px; height: 100px;">
+                    </div>
+                    <h1 class="m-0 text-primary">DOTEL</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto">
+                        @if (Context.Request.Path.StartsWithSegments("/Index"))
+                        {
+                            <a href="~/Index" class="nav-item nav-link active">Trang chủ</a>
+                        }
+                        else
+                        {
+                            <a href="~/Index" class="nav-item nav-link">Trang chủ</a>
+                        }
+                        @if (Context.Request.Path.StartsWithSegments("/RentHome"))
+                        {
+                            <a href="~/RentHome" class="nav-item nav-link active">Cho thuê</a>
+                        }
+                        else
+                        {
+                            <a href="~/RentHome" class="nav-item nav-link">Cho thuê</a>
+                        }
+                        @if (Context.Request.Path.StartsWithSegments("/Service"))
+                        {
+                            <a href="~/Service" class="nav-item nav-link active">Dịch vụ</a>
+                        }
+                        else
+                        {
+                            <a href="~/Service" class="nav-item nav-link">Dịch vụ</a>
+                        }
+
+                        
+                        @if (!string.IsNullOrEmpty(Context.Session.GetString("userJson")))
+                        {
+                            <a href="/FormRentHome" class="nav-item nav-link btn btn-primary px-3 d-lg-flex">Đăng tin<i class="fa-sharp fa-solid fa-circle-plus" style="margin-top: 5px;margin-left: 7px;"></i></a>
+                            <a href="/profile/@UserId" style="display: flex; justify-content: center; align-items: center;">
+                                <i class="fa-regular fa-circle-user fa-2x" style="color: #FEA116;"></i>
+                            </a>
+                            <a href="/login" class="nav-item nav-link btn btn-secondary px-3  d-lg-flex" style="color: #FEA116; margin-left: 20px;">Đăng xuất</a>
+                        }
+                        else
+                        {
+                            <a href="/login" class="nav-item nav-link btn btn-secondary px-3  d-lg-flex" style="color: #FEA116; margin-left: 20px;">Đăng nhập</a>
+                            <a href="/register" class="nav-item nav-link btn btn-secondary px-3  d-lg-flex" style="color: #FEA116; margin-left: 20px;">Đăng ký</a>
+                        }
+                    </div>
+
+
+                </div>
+            </nav>
+        </div>
+        <!-- Header End -->
+        <!-- Page Header Start -->
+        @if (Context.Request.Path.StartsWithSegments("/Index") || Context.Request.Path.Equals("/"))
+        {
+            <div class="container-fluid page-header mb-5 p-0" style="background-image:url(img/rent/banner.png)">
+                <div class="container-fluid page-header-inner py-5">
+                    <div class="container text-center pb-5">
+                        <h1 class="display-3 text-white mb-3 animated slideInDown">Trang chủ</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center text-uppercase">
+                                <li class="breadcrumb-item"><a href="~/Index">Trang chủ</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (Context.Request.Path.StartsWithSegments("/RentHome"))
+        {
+            <div class="container-fluid page-header mb-5 p-0" style="background-image:url(img/rent/banner.png)">
+                <div class="container-fluid page-header-inner py-5">
+                    <div class="container text-center pb-5">
+                        <h1 class="display-3 text-white mb-3 animated slideInDown">Trang Cho Thuê</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center text-uppercase">
+                                <li class="breadcrumb-item"><a href="~/Index">Trang chủ</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">Cho thuê</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <!-- Page Header End -->
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+
+        <!-- Newsletter Start -->
+        <div class="container newsletter mt-5 wow fadeIn" data-wow-delay="0.1s">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 border rounded p-1">
+                    <div class="border rounded text-center p-1">
+                        <div class="bg-white rounded text-center p-5">
+                            <h4 class="mb-4">Thắc mắc của bạn<span class="text-primary text-uppercase"> - Hỗ trợ giải đáp</span></h4>
+                            <div class="position-relative mx-auto" style="max-width: 400px;">
+                                <input class="form-control w-100 py-3 ps-4 pe-5" type="text" placeholder="Câu hỏi của bạn">
+                                <a href="https://m.me/106652955415850" target="_blank" type="button" class="btn btn-primary py-2 px-3 position-absolute top-0 end-0 mt-2 me-2">Gửi</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Newsletter Start -->
+        <!-- Messenger Plugin chat Code -->
+        <div id="fb-root"></div>
+
+        <!-- Your Plugin chat code -->
+        <div id="fb-customer-chat" class="fb-customerchat">
+        </div>
+
+        <script>
+            var chatbox = document.getElementById('fb-customer-chat');
+            chatbox.setAttribute("page_id", "101091636202575");
+            chatbox.setAttribute("attribution", "biz_inbox");
+        </script>
+
+        <!-- Your SDK code -->
+        <script>
+            window.fbAsyncInit = function () {
+                FB.init({
+                    xfbml: true,
+                    version: 'v15.0'
+                });
+            };
+
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+        <!-- Messenger Plugin chat Code -->
+        <!-- Footer Start  -->
+        <div class="container-fluid bg-dark text-light footer wow fadeIn" data-wow-delay="0.1s">
+            <div class="container pb-5">
+                <div class="row g-5">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="bg-primary rounded p-4">
+                            <a href="index.html"><h1 class="text-white text-uppercase mb-3">Dotel</h1></a>
+                            <p class="text-white mb-0">
+                                <a class="text-dark fw-medium" href="https://freewebsitecode.com/hotel-html-template-pro"></a>“Để việc tìm một mái ấm và chia sẻ không gian trở nên tối ưu và thuận tiện nhất, Dotel
+                                mang đến cho người dùng sự trải nghiệm hoàn mỹ về dịch vụ.”
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <h6 class="section-title text-start text-primary text-uppercase mb-4">Liên hệ</h6>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Trường Đại Học FPT cơ sở Hòa Lạc, Thạch Thất, Hà Nội</p>
+                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0394 305 705</p>
+                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>dotelonline1@gmail.com</p>
+                        <div class="d-flex pt-2">
+                            <a class="btn btn-outline-light btn-social" href="https://www.facebook.com/dotelonline1"><i class="fab fa-facebook"></i></a>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="row gy-5 g-4">
+                            <div class="col-md-6">
+                                <h6 class="section-title text-start text-primary text-uppercase mb-4">Chính sách</h6>
+
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="section-title text-start text-primary text-uppercase mb-4">Dịch vụ</h6>
+                                <a class="btn btn-link" href="RentHome">Cho thuê</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            <a class="border-bottom" href="https://www.facebook.com/dotelonline1" style="margin-top: 30px;"></a>Copyright © 2022 Dotel.Online
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <div class="footer-menu">
+                                <a href="">Trang chủ</a>
+                                <a href="">Cookies</a>
+                                <img src="img/index_img/DK.png" style="width: 140px; height: 50px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+
+        <!-- Footer End -->
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        @await RenderSectionAsync("Scripts", required: false)
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+        <script src="~/lib/wow/wow.min.js"></script>
+        <script src="~/lib/easing/easing.min.js"></script>
+        <script src="~/lib/waypoints/waypoints.min.js"></script>
+        <script src="~/lib/counterup/counterup.min.js"></script>
+        <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <!-- Template Javascript -->
+        <script src="~/js/main.js"></script>
+</body>
+</html>

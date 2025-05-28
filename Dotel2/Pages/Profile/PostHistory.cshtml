@@ -1,0 +1,72 @@
+﻿@page "{Id}"
+@using Dotel2.Models
+@using Newtonsoft.Json
+@model Dotel2.Pages.Profile.PostHistoryModel
+@{
+    User User = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("userJson"));
+    var UserId = User.UserId;
+    Layout = "Shared/_Layout2";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
+<div class="container-xl px-4 mt-4">
+    <!-- Account page navigation-->
+    <nav class="nav nav-borders">
+        <a class="nav-link " href="/profile/@UserId">Thông tin tài khoản</a>
+        <a class="nav-link" href="/profile/PostHistory/@UserId">Lịch sử bài đăng</a>
+        <a class="nav-link" href="/login/index">Đăng xuất</a>
+    </nav>
+    <hr class="mt-0 mb-4">
+    <div class="row">
+       
+    </div>
+    <!-- Billing history card-->
+    <div class="card mb-4">
+        <div class="card-header">Lịch sử bài đăng</div>
+        <div class="card-body p-0">
+            <!-- Billing history table-->
+            <div class="table-responsive table-billing-history">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Tên trọ</th>
+                        <th>Mô tả</th>
+                        <th>Giá</th>
+                        <th>Diện tích</th>
+                        <th>Số người tối đa</th>
+                        <th>Sđt Liên hệ</th>
+                        <th>Chủ trọ</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (Model.Rentals != null)
+                    {
+                        foreach (var rental in Model.Rentals)
+                        {
+                            <tr>
+                                <td>@rental.RentalId</td>
+                                <td>@rental.RentalTitle</td>
+                                <td>@rental.Description</td>
+                                <td>@rental.Price</td>
+                                <td>@rental.RoomArea</td>
+                                <td>@rental.MaxPeople</td>
+                                <td>@rental.ContactPhoneNumber</td>
+                                <td>@rental.UserId</td>
+                                <td>@rental.Location</td>
+                                <td>@(rental.Approval ? "Đã duyệt" : "Chưa duyệt")</td>
+                                <td>
+                                    <a asp-page="/Admin/Rentals/Edit" asp-route-id="@rental.RentalId">Edit</a>
+                                    <a asp-page="/Admin/Rentals/Delete" asp-route-id="@rental.RentalId">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

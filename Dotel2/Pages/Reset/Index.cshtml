@@ -1,0 +1,50 @@
+﻿@page
+@model Dotel2.Pages.Reset.IndexModel
+@{
+}
+<body>
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+            <div class="wrap-login100">
+                <form method="post" class="login100-form validate-form">
+                    <span class="login100-form-title p-b-34 p-t-27">
+                        Reset Password
+                    </span>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    <div class="wrap-input100">
+                        <span class="input100" style="padding-top: 15px">@Model.Email</span>
+                        <span class="focus-input100" data-placeholder="&#xf207;"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <input class="input100" type="password" name="Password" placeholder="Password" required>
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Repeat password">
+                        <input class="input100" type="password" name="RepeatPassword" placeholder="Repeat Password" required>
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button id="submitBtn" class="login100-form-btn">
+                            Submit
+                        </button>
+                        <span id="countdown" style="margin-left: 10px;"></span>
+                    </div>
+
+                    <div class="text-center p-t-90">
+                        <a class="txt1" href="login">
+                            Sign In
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

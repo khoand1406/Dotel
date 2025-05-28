@@ -1,0 +1,192 @@
+﻿@page
+@model Dotel2.Pages.FormRentHome.IndexModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Bài Cho Thuê</title>
+    <link rel="stylesheet" href="~/css/styleform.css" />
+    <script src="https://kit.fontawesome.com/682f180637.js"
+            crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), #ec9305), url("/img/backgroundform.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            outline: 0;
+            border: 1px solid #fff;
+            color: #fff;
+            background: transparent;
+            font-size: 15px;
+            appearance: none; /* Ẩn mũi tên mặc định của select */
+        }
+
+            .input-group select:focus {
+                border-color: #fff; /* Màu viền khi select được focus */
+            }
+
+            .input-group select option {
+                color: #000; /* Màu chữ của các option */
+                background-color: #fff; /* Màu nền của các option */
+            }
+
+        /* Định dạng checkbox và label */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Khoảng cách giữa checkbox và label */
+            color: #fff; /* Màu chữ của label */
+        }
+
+            .checkbox-group input[type="checkbox"] {
+                width: auto; /* Để checkbox tự điều chỉnh kích thước */
+                margin: 0; /* Xóa margin mặc định */
+                padding: 0; /* Xóa padding mặc định */
+                appearance: none; /* Ẩn giao diện mặc định của checkbox */
+                cursor: pointer; /* Con trỏ chuột là bàn tay khi di chuột vào checkbox */
+                border: 1px solid #fff; /* Viền checkbox */
+                height: 20px; /* Chiều cao checkbox */
+                width: 20px; /* Chiều rộng checkbox */
+                border-radius: 3px; /* Độ cong của checkbox */
+                transition: background-color 0.3s, border-color 0.3s; /* Hiệu ứng chuyển đổi */
+            }
+
+                .checkbox-group input[type="checkbox"]:checked {
+                    background-color: #fff; /* Màu nền khi checkbox được chọn */
+                    border-color: #fff; /* Màu viền khi checkbox được chọn */
+                }
+
+                .checkbox-group input[type="checkbox"] + span {
+                    font-size: 15px; /* Kích thước chữ của label */
+                }
+
+                /* Hiệu ứng hover cho checkbox */
+                .checkbox-group input[type="checkbox"]:hover {
+                    background-color: rgba(255, 255, 255, 0.1); /* Màu nền khi hover */
+                }
+
+
+            /* Định dạng icon trong label */
+            .checkbox-group span i {
+                margin-right: 5px; /* Khoảng cách giữa icon và văn bản */
+            }
+
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <form method="post" id="roommate" enctype="multipart/form-data">
+            <h1 style="
+            color: aliceblue;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+          ">
+                ĐĂNG BÀI CHO THUÊ
+            </h1>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            <div class="input-group">
+                <input type="text" name="title" id="name" required />
+                <label for="title"><i class="fa-regular fa-newspaper"></i> Tiêu đề bài đăng</label>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <input type="number" min="1" name="numberP" id="numberP" required />
+                    <label for="numberP"><i class="fa-solid fa-user"></i> Số người tối đa</label>
+                </div>
+                <div class="input-group">
+                    <select name="typeRoom" id="typeRoom" required>
+                        <option value="">Loại hình nhà ở</option>
+                        <option value="1">Nhà trọ</option>
+                        <option value="2">Chung cư</option>
+                        <option value="3">Nhà nguyên căn</option>
+                        <option value="4">Homestay</option>
+                        <option value="5">Chung cư mini</option>
+                        <option value="6">Chung cư cao cấp</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="input-group checkbox-group">
+                    <input type="checkbox" asp-for="Bathroom" id="bathroom" />
+                    <span><i class="fa-solid fa-bath"></i> Có phòng tắm</span>
+                </div>
+                <div class="input-group checkbox-group">
+                    <input type="checkbox" asp-for="Kitchen" id="kitchen" />
+                    <span><i class="fa-solid fa-stove"></i> Có bếp</span>
+                </div>
+                <div class="input-group">
+                    <input type="number" min="1" step="1" name="bedrooms" id="bedrooms" required />
+                    <label for="bedrooms"><i class="fa-solid fa-bed"></i> Số phòng ngủ</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <input type="number" min="1" step="1" name="price" id="price" required />
+                    <label for="price"><i class="fa-solid fa-money-bill"></i> Giá thuê</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" min="1" step="1" name="area" id="area" required />
+                    <label for="area"><i class="fa-solid fa-layer-group"></i> Diện tích</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" name="address" id="address" required />
+                    <label for="address"><i class="fa-solid fa-location-dot"></i> Địa điểm</label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="phone" name="phone" required></input>
+                <label for="phone"><i class="fa-solid fa-clipboard"></i>Số điện thoại liên hệ</label>
+            </div>
+
+            <div class="input-group">
+                <textarea id="description" name="description" rows="5" required></textarea>
+                <label for="description"><i class="fa-solid fa-clipboard"></i> Mô tả chi tiết</label>
+            </div>
+            <div class="input-group">
+                <h5 style="color: aliceblue;font-size: 15px;font-weight: bolder;">Cập nhật hình ảnh mô tả</h5>
+
+                <label for="files"></label>
+                <input type="file"
+                       id="files"
+                       name="mediaFiles"
+                       multiple="multiple"
+                       accept="image/jpeg, image/png, image/jpg" />
+                <output style="display: flex; flex-wrap: wrap" id="result"></output>
+                <script src="~/js/form.js"></script>
+            </div>
+
+            <div class="container">
+                <input type="submit" class="btn" />
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+﻿@page
+@model Dotel2.Pages.Admin.Users.UserModel;
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] </title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tên tài khoản</th>
+                <th>Số điện thoại</th>
+                <th>Số điện thoại 2</th>
+                <th>Email</th>
+                <th>Trạng thái</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.UserId</td>
+                    <td>@user.Fullname</td>
+                    <td>@user.MainPhoneNumber</td>
+                    <td>@user.SecondaryPhoneNumber</td>
+                    <td>@user.Email</td>
+                    <td>@user.Status</td>
+                    <td>@user.Role.RoleName</td>
+                    <td>
+                        <a href="./Users/Edit?id=@user.UserId">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@user.UserId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+</body>

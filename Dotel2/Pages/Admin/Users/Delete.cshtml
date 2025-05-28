@@ -1,0 +1,30 @@
+﻿@page
+@model Dotel2.Pages.Admin.Users.DeleteModel
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content ="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"]</title>
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/css/site.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="mt-4">Delete User</h1>"
+            <h3> Xác nhận xoá người dùng? </h3>
+            <form method="post">
+                <div class="form-group">
+                    <label asp-for="deleteUser.id" class="control-lable" type="hidden"></label>
+                    <input asp-for="deleteUser.id" class="form-control" readonly />
+                </div>
+                <input type="submit" value="Delete" class="btn btn-danger" />
+                <a asp-asp-page="./Index"> Quay lại</a>
+            </form>
+        </div>
+    </body>
+</html>

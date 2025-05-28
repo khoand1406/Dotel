@@ -1,0 +1,258 @@
+﻿*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+section{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+section .img-bg{
+    position: relative;
+    width: 50%;
+    height: 100%;
+}
+section .img-bg img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+section .noi-dung{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+section .noi-dung .form1{
+    border: 4px solid #993B22;
+    border-radius: 30px;
+    padding: 40px 30px;
+    width: 70%;
+}
+section .noi-dung .form1 h2{
+    color: #993B22;
+    font-weight: 500;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border-bottom: 4px solid #993B22;
+    display: inline-block;
+    letter-spacing: 1px;
+}
+section .noi-dung .form1 .input-form{
+    margin-bottom: 20px;
+}
+section .noi-dung .form1 .input-form span{
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: inline-block;
+    color: #993B22;
+    letter-spacing: 1px;
+     }
+section .noi-dung .form1 .input-form input{
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    border: 1px solid #993B22;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #993B22;
+    background: transparent;
+    border-radius: 30px;
+    }
+section .noi-dung .form1 .input-form input[type="button"]{
+    background: linear-gradient(90deg, #FFD28E 0%, #ff5a2c 100%);
+    
+    color: rgb(0, 0, 0);
+    outline: none;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.12),
+               0 2px 2px rgba(0,0,0,0.12),
+               0 4px 4px rgba(0,0,0,0.12),
+              0 8px 8px rgba(0,0,0,0.12),
+              0 16px 16px rgba(0,0,0,0.12);
+}
+section .noi-dung .form1 .input-form input[type="button"]:hover{
+    background: #993B22;
+}
+section .noi-dung .form1 .nho-dang-nhap{
+    margin-bottom: 10px;
+    color: #993B22;
+    font-size: 14px;
+}
+section .noi-dung .form1 .input-form p{
+    color: #000000;
+}
+section .noi-dung .form1 .input-form p a{
+    color: #993B22;
+}
+/* Form 2 */
+section .noi-dung .form2{
+    border: 4px solid #993B22;
+    border-radius: 30px;
+    padding: 40px 30px;
+    width: 70%;
+
+}
+section .noi-dung .form2 h2{
+    color: #993B22;
+    font-weight: 500;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border-bottom: 4px solid #993B22;
+    display: inline-block;
+    letter-spacing: 1px;
+}
+section .noi-dung .form2 .input-form{
+    margin-bottom: 10px;
+}
+section .noi-dung .form2 .input-form span{
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: inline-block;
+    color: #993B22;
+    letter-spacing: 1px;
+     }
+section .noi-dung .form2 .input-form input{
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    border: 1px solid #993B22;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #993B22;
+    background: transparent;
+    border-radius: 30px;
+    }
+section .noi-dung .form2 .input-form input[type="button"]{
+    background: linear-gradient(90deg, #FFD28E 0%, #ff5a2c 100%);
+    
+    color: rgb(0, 0, 0);
+    outline: none;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.12),
+               0 2px 2px rgba(0,0,0,0.12),
+               0 4px 4px rgba(0,0,0,0.12),
+              0 8px 8px rgba(0,0,0,0.12),
+              0 16px 16px rgba(0,0,0,0.12);
+}
+section .noi-dung .form2 .input-form input[type="button"]:hover{
+    background: #993B22;
+}
+section .noi-dung .form2 .nho-dang-nhap{
+    margin-bottom: 10px;
+    color: #993B22;
+    font-size: 14px;
+}
+section .noi-dung .form2 .input-form p{
+    color: #000000;
+}
+section .noi-dung .form2 .input-form p a{
+    color: #993B22;
+}
+@media (max-width: 768px) {
+    .img-bg {
+        display: none; /* Ẩn phần hình ảnh trên màn hình nhỏ */
+    }
+
+    .userform {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100vh; /* Chiều cao toàn màn hình */
+    }
+
+    section .noi-dung {
+        padding: 20px;
+        width: 140%;
+        display: flex;
+        justify-content: center; /* Đặt nội dung ở giữa theo chiều ngang */
+        align-items: center; /* Đặt nội dung ở giữa theo chiều dọc */
+    }
+
+    .form2 {
+        width: 100%;
+        max-width: 400px; /* Giới hạn chiều rộng tối đa của form */
+        border: 4px solid #993B22;
+        border-radius: 30px;
+        padding: 40px 30px;
+    }
+
+        .form2 h2 {
+            color: #993B22;
+            font-weight: 500;
+            font-size: 1.5em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #993B22;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .form2 .input-form {
+            margin-bottom: 10px;
+        }
+
+            .form2 .input-form span {
+                font-size: 16px;
+                margin-bottom: 5px;
+                display: inline-block;
+                color: #993B22;
+                letter-spacing: 1px;
+            }
+
+            .form2 .input-form input {
+                width: 100%;
+                padding: 10px 20px;
+                outline: none;
+                border: 1px solid #993B22;
+                font-size: 16px;
+                letter-spacing: 1px;
+                color: #993B22;
+                background: transparent;
+                border-radius: 30px;
+            }
+
+                .form2 .input-form input[type="button"] {
+                    background: linear-gradient(90deg, #FFD28E 0%, #ff5a2c 100%);
+                    color: rgb(0, 0, 0);
+                    outline: none;
+                    border: none;
+                    font-weight: 500;
+                    cursor: pointer;
+                    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+                }
+
+                    .form2 .input-form input[type="button"]:hover {
+                        background: #993B22;
+                    }
+
+        .form2 .nho-dang-nhap {
+            margin-bottom: 10px;
+            color: #993B22;
+            font-size: 14px;
+        }
+
+        .form2 .input-form p {
+            color: #000000;
+        }
+
+            .form2 .input-form p a {
+                color: #993B22;
+            }
+}
+

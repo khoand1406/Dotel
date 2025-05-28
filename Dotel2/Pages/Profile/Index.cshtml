@@ -1,0 +1,63 @@
+﻿@page "{Id}"
+@using Dotel2.Models
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+@model Dotel2.Pages.Profile.IndexModel
+@{
+    User User = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("userJson"));
+    var UserId = User.UserId;
+    Layout = "Shared/_Layout2";
+}
+<div class="container-xl px-4 mt-4">
+    <!-- Account page navigation-->
+    <nav class="nav nav-borders">
+        <a class="nav-link " href="/profile/@UserId">Thông tin tài khoản</a>
+        <a class="nav-link" href="/profile/PostHistory/@UserId">Lịch sử bài đăng</a>
+        <a class="nav-link" href="/login/index">Đăng xuất</a>
+    </nav>
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Thông tin tài khoản</div>
+                <div class="card-body">
+                    <form method="post">
+                        <!-- Form Group (username)-->
+                        <div class="mb-3">
+                            <label class="small mb-1">Email </label>
+                            <input class="form-control" type="email" placeholder="Nhập email của bạn" value="@Model.user.Email" asp-for="Email">
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-12">
+                                <label class="small mb-1" for="inputFirstName">Họ và tên</label>
+                                <input class="form-control" id="inputFirstName" type="text" placeholder="Nhập họ và tên của bạn" value="@Model.user.Fullname" asp-for="Fullname">
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (location)-->
+                            <div class="col-md-12">
+                                <label class="small mb-1" for="inputLocation">Số điện thoại chính</label>
+                                <input class="form-control" id="inputLocation" type="text" pattern="\d{10}" placeholder="Nhập số điện thoại chính của bạn" value="@Model.user.MainPhoneNumber" asp-for="MainPhoneNumber">
+                            </div>
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (phone number)-->
+                            <div class="col-md-12">
+                                <label class="small mb-1" for="inputPhone">Số điện thoại phụ</label>
+                                <input class="form-control" id="inputPhone" type="tel" pattern="\d{10}" placeholder="Nhập số điện thoại phụ của bạn" value="@Model.user.SecondaryPhoneNumber" asp-for="SecondaryPhoneNumber">
+                            </div>
+                        </div>
+                        <!-- Save changes button-->
+                        <button class="btn btn-primary" id="savechange" type="submit">Lưu thay đổi</button>
+                    </form>
+         
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

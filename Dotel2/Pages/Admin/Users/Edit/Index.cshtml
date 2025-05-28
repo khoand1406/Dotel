@@ -1,0 +1,61 @@
+﻿@page
+@model Dotel2.Pages.Admin.Users.Edit.IndexModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] </title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="EditUser.UserId" class="control-lable" type ="hidden"></label>
+            <input asp-for="EditUser.UserId" class="form-control" readonly/>
+        </div>
+        <div class="form-group">
+            <label asp-for="EditUser.Fullname" class="control-lable"></label>
+            <input asp-for="EditUser.Fullname" class="form-control" />
+            <span asp-validation-for="EditUser.Fullname" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EditUser.MainPhoneNumber" class="control-lable">Main Phone Number</label>
+            <input asp-for="EditUser.MainPhoneNumber" class="form-control" />
+            <span asp-validation-for="EditUser.MainPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EditUser.Email" class="control-lable">Email</label>
+            <input asp-for="EditUser.Email" class="form-control" />
+            <span asp-validation-for="EditUser.Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EditUser.SecondaryPhoneNumber" class="control-lable">Secondary Phone Number</label>
+            <input asp-for="EditUser.SecondaryPhoneNumber" class="form-control" />
+            <span asp-validation-for="EditUser.SecondaryPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EditUser.Status" class="control-lable">Status</label>
+            <div class="form-check">
+                <input asp-for="EditUser.Status" class="form-check-input" />
+                <label class="form-check-label" asp-for="EditUser.Status"> Active</label>
+            </div>
+            <span asp-validation-for="EditUser.Status" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EditUser.RoleId" class="control-lable">Role ID</label>
+            <input asp-for="EditUser.RoleId" class="form-control" />
+            <span asp-validation-for="EditUser.RoleId" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+        <a class="btn btn-primary" href="/Admin/Users">Huỷ</a>
+    </form>
+</body>
+</html>
