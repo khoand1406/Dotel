@@ -6,152 +6,111 @@
     Layout = "Shared/_Layout2";
 }
 
-
-
-
 <body>
     <style>
         .sub-image {
-            height: 500px; /* Adjust the height as needed */
-            width: 100%; /* Maintain aspect ratio */
-            object-fit: cover; /* Ensure the image covers the entire container */
+            height: 450px;
+            width: 100%;
+            object-fit: cover;
         }
 
         .detail-heading {
-            font-size: 1.5em;
-            color: #333; /* Adjust color as needed */
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
             margin-bottom: 10px;
         }
 
-        .detail-info {
-            border: 1px solid #ccc;
-            padding: 10px;
+        .detail-info p {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 1rem;
         }
 
-            .detail-info p {
-                margin: 0;
-                padding: 5px 0;
-                font-size: 1.1em;
-            }
+        .map-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+        }
 
-            .detail-info i {
-                margin-right: 5px;
-                color: #007bff; /* Adjust color as needed */
+            .map-responsive iframe {
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                position: absolute;
             }
-
     </style>
-    <div class="container-fluid booking pb-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="bg-white shadow" style="padding: 35px;">
+
+    <div class="container-xxl py-5">
+        <div class="row g-4">
+            <!-- Cột trái: Hình ảnh + Mô tả -->
+            <div class="col-lg-8">
+                <div id="header-carousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var image in Model.Rental.RentalListImages)
+                        {
+                            <div class="carousel-item @(image == Model.Rental.RentalListImages.First() ? "active" : "")">
+                                <img class="sub-image" src="/@image.Sourse" alt="Image">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <h2 class="text-primary">@Model.Rental.RentalTitle</h2>
+                <p><strong>Địa chỉ:</strong> @Model.Rental.Location</p>
+                <div>@Html.Raw(Model.Rental.Description.Replace("\n", "<br>").Replace("\r", ""))</div>
+
+                <h4 class="mt-4">Tiện ích</h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item">🛏 Phòng ngủ: @Model.Rental.BedroomNumber</li>
+                    <li class="list-group-item">🛁 Phòng tắm: @(Model.Rental.Bathroom == true ? "Có" : "Không")</li>
+                    <li class="list-group-item">🍳 Bếp: @(Model.Rental.Kitchen == true ? "Có" : "Không")</li>
+                    <li class="list-group-item">👥 Số người tối đa: @Model.Rental.MaxPeople</li>
+                </ul>
+
+                @if (Model.Rental.GoogleMap != null)
+                {
+                    <h4 class="mt-4">Vị trí trên bản đồ</h4>
+                    <div class="map-responsive">
+                        <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=vi&amp;q=@Model.Rental.GoogleMap&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                        </iframe>
+                    </div>
+                }
+            </div>
+
+            <!-- Cột phải: Thông tin liên hệ -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm p-4">
+                    <h5 class="text-primary">Thông tin liên hệ</h5>
+                    @if (Model.userSessionTime != null)
+                    {
+                        <p><strong>Số điện thoại:</strong> @Model.Rental.ContactPhoneNumber</p>
+                    }
+                    else
+                    {
+                        <p><a href="/login">Đăng nhập để xem thông tin liên hệ</a></p>
+                    }
+
+                    <hr />
+                    <a href="/Index" class="btn btn-outline-primary w-100">⬅ Trở về danh sách</a>
+                </div>
             </div>
         </div>
     </div>
-    <section id="aa-properties container-xxl">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="aa-properties-content">
-                        <div class="aa-properties-details">
-                            <div class="aa-properties-details-img">
-                                <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        @foreach (var image in Model.Rental.RentalListImages)
-                                        {
-                                            <div class="carousel-item @(image == Model.Rental.RentalListImages.First() ? "active" : "")">
 
-                                                <img class="sub-image" src="/@image.Sourse" alt="Image">
-
-                                            </div>
-                                        }
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" style="background-image: url(/img/left-arrow.png)" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" style="background-image: url(/img/right-arrow.png)" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="aa-properties-info mb-0">
-                                <div id="contact">
-                                    <h1 style="color: #FEA116; margin-top: 15px;">@Model.Rental.RentalTitle</h1>
-                                    <h3>Địa chỉ: @Model.Rental.Location</h3>
-                                    <div><p>@Html.Raw(Model.Rental.Description.Replace("\n", "<br>").Replace("\r", ""))</p></div>
-                                    <br />
-
-                                </div>
-                                @if (Model.Rental.GoogleMap != null)
-                                {
-                                    <h3>Vị trí trên bản đồ</h3>
-                                    <div style="width: 100%" class="aa-properties-info mb-0">
-                                        <iframe width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                                src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=@Model.Rental.GoogleMap&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
-                                            <a href="https://www.gps.ie/">gps trackers</a>
-                                        </iframe>
-                                    </div>
-                                }
-                               
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-4">
-                    <aside class="aa-properties-sidebar">
-                        <div class="aa-properties-single-sidebar">
-                            <div id="contact">
-                                <h1>@Model.Rental.RentalTitle</h1>
-                                <h3>Địa chỉ: @Model.Rental.Location</h3>
-                                <br />
-
-                                <h3 class="detail-heading">Chi tiết các tiện ích</h3>
-                                <div class="detail-info">
-                                    <p><i class="fas fa-bed"></i>Số phòng ngủ: @Model.Rental.BedroomNumber</p>
-                                    <p><i class="fa-solid fa-bath"></i> Phòng tắm: @(Model.Rental.Bathroom == true ? "Có" : "Không")</p>
-                                    <p><i class="fa-solid fa-fire-burner"></i> Bếp nấu ăn: @(Model.Rental.Kitchen == true ? "Có" : "Không")</p>
-                                    <p><i class="fa-solid fa-people-group"></i>Số người tối đa: @Model.Rental.MaxPeople</p>
-
-                                </div>
-
-                                <h4>Thông tin liên hệ </h4>
-                                <div>
-                                    @if (Model.userSessionTime != null)
-                                    {
-                                        <p> SDT:  @Model.Rental.ContactPhoneNumber</p>
-
-                                    }
-                                    else
-                                    {
-                                        <a href="/login">Hãy đăng nhập để xem chi tiết</a>
-                                    }
-
-                                </div>
-                            </div>
-
-                            <div class="aa-properties-single-sidebar">
-                                <div class="heart-btn"></div>
-                            </div>
-                            <div class="aa-properties-single-sidebar">
-
-
-                                <h6 class="media-right"><a href="/Index">Trở về trang thuê trọ </a></h6>
-
-                            </div>
-                        </div>
-                    </aside>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-
-    <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
