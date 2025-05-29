@@ -224,7 +224,8 @@
                 const suggestions = await responseData.json();
                 suggestList.innerHTML = "";
                 if (suggestions.length > 0) {
-                    suggestions.foreach(loc => {
+                    suggestList.style.display = "block";
+                    suggestions.forEach(loc => {
                         const li = document.createElement("li");
                         li.classList.add("list-group-item");
                         li.textContent = loc;

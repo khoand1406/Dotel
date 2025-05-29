@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 
 namespace Dotel2.Models
@@ -30,6 +31,13 @@ namespace Dotel2.Models
         public virtual Role Role { get; set; } = null!;
         public ICollection<UserMembership> UserMemberships { get; set; }
         public virtual ICollection<Rental> Rentals { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Conversations> ConversationsAsUser1 { get; set; }
+        [JsonIgnore]
+        public ICollection<Conversations> ConversationsAsUser2 { get; set; }
+        [JsonIgnore]
+        public ICollection<Message> Messages { get; set; }
 
         public static implicit operator User(string v)
         {
