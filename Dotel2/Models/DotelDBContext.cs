@@ -32,6 +32,8 @@ namespace Dotel2.Models
         public DbSet<Conversations> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Review> Reviews { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
@@ -296,6 +298,24 @@ namespace Dotel2.Models
                 .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ConversationId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+           .HasOne(r => r.Rental)
+           .WithMany(r => r.Reviews)
+           .HasForeignKey(r => r.RentalId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            // Liên kết Review với User
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Optional: Ngăn đánh giá trùng cho cùng 1 phòng từ 1 user
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => new { r.RentalId, r.UserId })
+                .IsUnique();
 
             OnModelCreatingPartial(modelBuilder);
         }

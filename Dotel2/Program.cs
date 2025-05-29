@@ -1,5 +1,6 @@
 using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
 using EXE_Dotel.Repository.Rental;
 
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<DotelDBContext>();
 builder.Services.AddSession();
 builder.Services.AddScoped<IRentalRepository, RentalRepostiory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRespository>();
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();

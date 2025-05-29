@@ -91,7 +91,7 @@
 
             <!-- Cột phải: Thông tin liên hệ -->
             <div class="col-lg-4">
-                <div class="card shadow-sm p-4">
+                <div class="card shadow-sm p-5">
                     <h5 class="text-primary">Thông tin liên hệ</h5>
                     @if (Model.userSessionTime != null)
                     {
@@ -105,6 +105,73 @@
                     <hr />
                     <a href="/Index" class="btn btn-outline-primary w-100">⬅ Trở về danh sách</a>
                 </div>
+                <h4 class="text-primary text-center mt-4 mb-3">Đánh giá của người dùng</h4>
+
+                @if (Model.Reviews != null && Model.Reviews.Any())
+                {
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1 text-dark">@review.FullName</h6>
+                                    <small class="text-muted">@review.CreatedAt.ToString("dd/MM/yyyy")</small>
+                                </div>
+                                <div class="mb-2">
+                                    @for (int i = 0; i < review.Rating; i++)
+                                    {
+                                        <span class="text-warning">&#9733;</span> <!-- ★ filled star -->
+                                    }
+                                    @for (int i = review.Rating; i < 5; i++)
+                                    {
+                                        <span class="text-secondary">&#9734;</span> <!-- ☆ empty star -->
+                                    }
+                                </div>
+                                <p class="mb-0">@review.Comment</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-info text-center">
+                        Chưa có đánh giá nào cho phòng trọ này.
+                    </div>
+                }
+                @if (Model.userSessionTime != null)
+                {
+                    <div class="card mt-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Gửi đánh giá của bạn</h5>
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label for="Rating" class="form-label">Số sao đánh giá</label>
+                                    <select asp-for="NewReview.Rating" class="form-select" required>
+                                        <option value="">Chọn số sao</option>
+                                        <option value="5">★★★★★ - Rất tốt</option>
+                                        <option value="4">★★★★☆ - Tốt</option>
+                                        <option value="3">★★★☆☆ - Trung bình</option>
+                                        <option value="2">★★☆☆☆ - Kém</option>
+                                        <option value="1">★☆☆☆☆ - Rất kém</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Comment" class="form-label">Nội dung đánh giá</label>
+                                    <textarea asp-for="NewReview.Comment" class="form-control" rows="4" required></textarea>
+                                </div>
+                                <input type="hidden" asp-for="NewReview.RentalId" value="@Model.Rental.RentalId" />
+                                <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mt-4 text-center">
+                        <a href="/login">Đăng nhập</a> để gửi đánh giá của bạn.
+                    </div>
+                }
+
             </div>
         </div>
     </div>
@@ -116,7 +183,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/main.js"></script>
-    <script src="~/js/IndexPage.js"></script>
+    
     <script src="~/lib/wow/wow.min.js"></script>
     <script src="~/lib/easing/easing.min.js"></script>
     <script src="~/lib/waypoints/waypoints.min.js"></script>
