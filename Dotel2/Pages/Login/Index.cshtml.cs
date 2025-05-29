@@ -91,6 +91,7 @@ namespace Dotel2.Pages.Login
                 // Set session
                 string userJson = JsonConvert.SerializeObject(user);
                 HttpContext.Session.SetString("userJson", userJson);
+                HttpContext.Session.SetInt32("UserId", user.UserId);
 
                 return RedirectToPage("/Index");
             }

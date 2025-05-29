@@ -1,6 +1,8 @@
 ﻿using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
+using Dotel2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Reflection.Metadata;
@@ -11,11 +13,13 @@ namespace Dotel2.Pages
     public class RentHomeDetailsModel : PageModel
     {
         private readonly IRentalRepository repository;
-        private readonly IUserRepository userRepository;
-        public RentHomeDetailsModel(IRentalRepository repo, IUserRepository userRepository)
+        
+        private readonly IReviewRepository reviewRepository;
+        public RentHomeDetailsModel(IRentalRepository repo, IUserRepository userRepository, IReviewRepository reviewRepo)
         {
             repository = repo;
-            this.userRepository = userRepository;
+            
+            this.reviewRepository = reviewRepo;
         }
 
 
@@ -25,6 +29,11 @@ namespace Dotel2.Pages
         public string? userSessionTime { get; set; }
         //
         public User User { get; set; }
+
+        public List<ReviewViewModel> Reviews { get; set; }
+
+        [BindProperty]
+        public ReviewInputModel NewReview { get; set; }
 
         public IActionResult OnGet(int Id)
         {
@@ -38,7 +47,8 @@ namespace Dotel2.Pages
             {
                 Rental.Description = FormatDescription(Rental);
             }
-
+            
+            Reviews= reviewRepository.GetReviews(Id);
 
            
             return Page();
@@ -83,5 +93,23 @@ namespace Dotel2.Pages
                 "</ul><p>HOLA GATE không chỉ đầy đủ tiện nghi mà còn có vị trí đẹp, không gian thoáng đãng và nhiều dịch vụ hỗ trợ tiện lợi. Hãy liên hệ ngay để trải nghiệm!</p>" }
             };
 
+        public IActionResult OnPost()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId==null) return RedirectToPage("/Login/Index");
+            int id = userId.Value;
+
+            var review = new Review {
+                Rating = NewReview.Rating,
+                Comment = NewReview.Comment,
+                RentalId = NewReview.RentalId,
+                UserId = id,
+                CreatedAt = DateTime.Now
+
+            };
+            reviewRepository.CreateReview(review);
+            return RedirectToPage(new { Id = NewReview.RentalId });
+
+        }
     }
 }

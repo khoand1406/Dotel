@@ -34,5 +34,7 @@ namespace Dotel2.Models
         public virtual ICollection<RentalListImage> RentalListImages { get; set; }
         public virtual ICollection<RentalVideo> RentalVideos { get; set; }
         public virtual ICollection<SponsorRental> SponsorRentals { get; set; }
+
+        public ICollection<Review> Reviews { get; set; }
     }
 }
