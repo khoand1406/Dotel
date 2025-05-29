@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.VisualBasic;
 
 namespace Dotel2.Models
 {
@@ -27,6 +28,9 @@ namespace Dotel2.Models
 
         public DbSet<MemberShipType> MembershipTypes { get; set; }
         public DbSet<UserMembership> UserMemberships { get; set; }
+
+        public DbSet<Conversations> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -270,6 +274,28 @@ namespace Dotel2.Models
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK_User_Role");
             });
+            modelBuilder.Entity<Conversations>()
+        .HasOne(c => c.User1)
+        .WithMany(u => u.ConversationsAsUser1)
+        .HasForeignKey(c => c.User1Id)
+        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Conversations>()
+                .HasOne(c => c.User2)
+                .WithMany(u => u.ConversationsAsUser2)
+                .HasForeignKey(c => c.User2Id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany(u => u.Messages)
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             OnModelCreatingPartial(modelBuilder);
         }
