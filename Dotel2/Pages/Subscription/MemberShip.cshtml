@@ -1,0 +1,25 @@
+﻿@page
+@model Dotel2.Pages.Subscription.MemberShipModel
+@{
+    Layout = "Shared/_Layout2";
+}
+<h2 class="text-center mt-4">Chọn Gói Hội Viên</h2>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var membership in Model.memberShips)
+        {
+            <div class="col-md-4">
+                <form method="post" asp-page-handler="Choose" class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@membership.Name</h5>
+                        <p class="card-text">@membership.Description</p>
+                        <p><strong>@membership.Price.ToString("N0")₫</strong> / @membership.DurationInDays ngày</p>
+                        <input type="hidden" name="MembershipTypeId" value="@membership.MembershipTypeId" />
+                        <button type="submit" class="btn btn-success w-100">Chọn gói này</button>
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+</div>

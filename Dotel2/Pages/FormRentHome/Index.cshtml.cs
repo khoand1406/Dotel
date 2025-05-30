@@ -17,11 +17,11 @@ namespace Dotel2.Pages.FormRentHome
     {
         private readonly DotelDBContext _context;
         private readonly string _uploadDirectory = "wwwroot/uploads";
-
+        
         public IndexModel(DotelDBContext context)
         {
             _context = context;
-
+            
             if (!Directory.Exists(_uploadDirectory))
             {
                 Directory.CreateDirectory(_uploadDirectory);
