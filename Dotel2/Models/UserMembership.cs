@@ -27,6 +27,6 @@ namespace Dotel2.Models
         public DateTime EndDate { get; set; }
 
         [Required]
-        public bool IsActive { get; set; }
+        public bool IsActive => DateTime.Now >= StartDate && DateTime.Now <= EndDate;
     }
 }
