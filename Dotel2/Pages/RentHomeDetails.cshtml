@@ -177,12 +177,31 @@
     </div>
 
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <div id="chat-popup" class="chat-popup">
+        <div class="chat-header">
+            <span>Trò chuyện với người đăng</span>
+            <button id="close-chat" class="close-btn">&times;</button>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Tin nhắn sẽ hiển thị tại đây -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Nhập tin nhắn..." />
+            <button id="send-message">Gửi</button>
+        </div>
+    </div>
 
+    <!-- Nút mở chat -->
+    <button id="open-chat" class="chat-open-btn">💬 Chat</button>
+    <script>
+        window.recipientId = @Model.Rental.UserId;
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/main.js"></script>
+    <script src="~/js/chatbox.js"></script>
     
     <script src="~/lib/wow/wow.min.js"></script>
     <script src="~/lib/easing/easing.min.js"></script>

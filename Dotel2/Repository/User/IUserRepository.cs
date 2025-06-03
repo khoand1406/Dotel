@@ -6,5 +6,9 @@ namespace Dotel2.Repository.User
     {
         public Models.User getUserbyRentalId(int uId);
         public bool checkUserMemberShip(Models.User user);
+
+        public List<Message> getMessagesByUserId(int senderId, int receiver);
+
+        public void SendMessage(Message message, int senderId, int receiver);
     }
 }
