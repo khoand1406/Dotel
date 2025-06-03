@@ -16,9 +16,19 @@ namespace Dotel2.Repository.User
                 .Any(ship => ship.UserId == user.UserId && ship.EndDate> DateTime.UtcNow );
         }
 
+        public List<Message> getMessagesByUserId(int senderId, int receiver)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.User getUserbyRentalId(int uId)
         {
             return context.Users.FirstOrDefault(user => user.UserId == uId);
+        }
+
+        public void SendMessage(Message message, int senderId, int receiver)
+        {
+            throw new NotImplementedException();
         }
     }
 }
