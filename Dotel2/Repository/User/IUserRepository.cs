@@ -10,5 +10,9 @@ namespace Dotel2.Repository.User
         public List<Message> getMessagesByUserId(int senderId, int receiver);
 
         public void SendMessage(Message message, int senderId, int receiver);
+
+        public List<Conversations> getConversationsByUserId(int userIdFrom);
+
+        public List<Message>getMessagesByConversationId(int conversationId);
     }
 }

@@ -29,19 +29,16 @@ namespace Dotel2.Models
 
         [JsonIgnore] // Ngăn chặn serialization của thuộc tính Role
         public virtual Role Role { get; set; } = null!;
-        public ICollection<UserMembership> UserMemberships { get; set; }
+        public ICollection<UserMembership> UserMemberships { get; set; } = new HashSet<UserMembership>();
         public virtual ICollection<Rental> Rentals { get; set; }
 
         [JsonIgnore]
-        public ICollection<Conversations> ConversationsAsUser1 { get; set; }
+        public ICollection<Conversations> ConversationsAsUser1 { get; set; }= new HashSet<Conversations>();
         [JsonIgnore]
-        public ICollection<Conversations> ConversationsAsUser2 { get; set; }
+        public ICollection<Conversations> ConversationsAsUser2 { get; set; }= new HashSet<Conversations>();
         [JsonIgnore]
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<Message> Messages { get; set; }= new List<Message>();
 
-        public static implicit operator User(string v)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
