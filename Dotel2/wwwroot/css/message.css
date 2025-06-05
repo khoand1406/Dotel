@@ -1,0 +1,115 @@
+﻿:root {
+    --primary: #0070f3;
+    --primary-foreground: #ffffff;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #111111;
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    --border: #e5e5e5;
+    --input: #f5f5f5;
+}
+
+[data-theme="dark"] {
+    --primary: #0070f3;
+    --primary-foreground: #ffffff;
+    --secondary: #1a1a1a;
+    --secondary-foreground: #ffffff;
+    --background: #111111;
+    --foreground: #ffffff;
+    --card: #1a1a1a;
+    --card-foreground: #ffffff;
+    --border: #2a2a2a;
+    --input: #1a1a1a;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.chat-sidebar {
+    background: var(--secondary);
+    border-right: 1px solid var(--border);
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.chat-main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.conversation-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid var(--border);
+}
+
+    .conversation-item:hover,
+    .conversation-item.active {
+        background-color: var(--input);
+    }
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: var(--background);
+}
+
+.message {
+    margin-bottom: 1rem;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 0.75rem;
+    border-radius: 1rem;
+}
+
+.received .message-content {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    border-top-left-radius: 0;
+}
+
+.sent {
+    display: flex;
+    justify-content: flex-end;
+}
+
+    .sent .message-content {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border-top-right-radius: 0;
+    }
+
+.chat-input {
+    background-color: var(--background);
+    border-top: 1px solid var(--border);
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .chat-sidebar {
+        height: 100%;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+        .chat-sidebar.show {
+            transform: translateX(0);
+        }
+}

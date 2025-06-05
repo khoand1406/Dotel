@@ -1,5 +1,8 @@
-﻿using Dotel2.Repository.User;
+﻿using Dotel2.Models;
+using Dotel2.Repository.User;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Dotel2.Controllers
 {
@@ -15,6 +18,20 @@ namespace Dotel2.Controllers
         [HttpPost]
         public IActionResult sendMessage([FromBody] MessageRequestDto messageRequestDto)
         {
+            var userJson = HttpContext.Session.GetString("userJson");
+            if (string.IsNullOrEmpty(userJson))
+            {
+                return Unauthorized(new { error = "Chưa đăng nhập" });
+            }
+
+            try
+            {
+                var user = JsonConvert.DeserializeObject<User>(userJson);
+            }
+            catch
+            {
+                return BadRequest(new {error= "Sai format user"});
+            }
             return Ok(new { success = true });
         }
     }

@@ -16,6 +16,19 @@ namespace Dotel2.Repository.User
                 .Any(ship => ship.UserId == user.UserId && ship.EndDate> DateTime.UtcNow );
         }
 
+        public List<Conversations> getConversationsByUserId(int userIdFrom)
+        {
+            return context.Conversations.Where
+                (conv=> conv.User1Id == userIdFrom)
+                .OrderBy(conv=> conv.CreatedAt)
+                .ToList();
+        }
+
+        public List<Message> getMessagesByConversationId(int conversationId)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Message> getMessagesByUserId(int senderId, int receiver)
         {
             throw new NotImplementedException();

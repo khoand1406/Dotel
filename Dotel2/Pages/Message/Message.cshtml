@@ -1,0 +1,92 @@
+﻿@page
+@model Dotel2.Pages.Message.MessageModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/css/message.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-12 col-md-4 col-lg-3 chat-sidebar">
+                <div class="search-box p-3">
+                    <input type="text" class="form-control" placeholder="Search conversations...">
+                </div>
+                <div class="conversations-list">
+                    <div class="conversation-item active p-3">
+                        <div class="d-flex align-items-center">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" class="avatar" alt="User avatar">
+                            <div class="ms-3 flex-grow-1">
+                                <h6 class="mb-0">Sarah Wilson</h6>
+                                <p class="text-muted small mb-0">Hey, how are you doing?</p>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted">2m</small>
+                                <span class="badge bg-primary rounded-pill ms-2">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="conversation-item p-3">
+                        <div class="d-flex align-items-center">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d" class="avatar" alt="User avatar">
+                            <div class="ms-3 flex-grow-1">
+                                <h6 class="mb-0">John Davis</h6>
+                                <p class="text-muted small mb-0">Let's meet tomorrow</p>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted">1h</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9 chat-main">
+                <div class="chat-header p-3">
+                    <div class="d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" class="avatar" alt="User avatar">
+                        <div class="ms-3">
+                            <h5 class="mb-0">Sarah Wilson</h5>
+                            <small class="text-muted">Online</small>
+                        </div>
+                        <div class="ms-auto">
+                            <button class="btn btn-light me-2"><i class="bi bi-telephone"></i></button>
+                            <button class="btn btn-light me-2"><i class="bi bi-camera-video"></i></button>
+                            <button class="btn btn-light"><i class="bi bi-three-dots"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-messages p-3">
+                    <div class="message received">
+                        <div class="message-content">
+                            <p>Hi there! How are you?</p>
+                            <small class="text-muted">10:30 AM</small>
+                        </div>
+                    </div>
+                    <div class="message sent">
+                        <div class="message-content">
+                            <p>I'm doing great! Thanks for asking.</p>
+                            <small class="text-muted">10:31 AM</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input p-3">
+                    <div class="input-group">
+                        <button class="btn btn-light"><i class="bi bi-emoji-smile"></i></button>
+                        <button class="btn btn-light"><i class="bi bi-paperclip"></i></button>
+                        <input type="text" class="form-control" placeholder="Type a message...">
+                        <button class="btn btn-primary"><i class="bi bi-send"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
