@@ -7,12 +7,10 @@ namespace Dotel2.Repository.User
         public Models.User getUserbyRentalId(int uId);
         public bool checkUserMemberShip(Models.User user);
 
-        public List<Message> getMessagesByUserId(int senderId, int receiver);
+        public void createNewConvesation(Conversations conversations);
+        public Conversations getConversationByUserId(int userIdFrom, int userIdTo);
 
-        public void SendMessage(Message message, int senderId, int receiver);
-
-        public List<Conversations> getConversationsByUserId(int userIdFrom);
-
-        public List<Message>getMessagesByConversationId(int conversationId);
+        public List<Conversations> getConversationsByUserId(int userId);
+        
     }
 }

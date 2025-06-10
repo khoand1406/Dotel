@@ -1,5 +1,6 @@
 using Dotel2.Models;
 using Dotel2.Repository.MemberShip;
+using Dotel2.Repository.Message;
 using Dotel2.Repository.Rental;
 using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
@@ -15,6 +16,7 @@ builder.Services.AddScoped<IRentalRepository, RentalRepostiory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRespository>();
 builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();

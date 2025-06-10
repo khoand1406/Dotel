@@ -15,11 +15,15 @@ namespace Dotel2.Pages
         private readonly IRentalRepository repository;
         
         private readonly IReviewRepository reviewRepository;
+
+        private readonly IUserRepository userRepository;
         public RentHomeDetailsModel(IRentalRepository repo, IUserRepository userRepository, IReviewRepository reviewRepo)
         {
             repository = repo;
             
             this.reviewRepository = reviewRepo;
+
+            this.userRepository = userRepository;
         }
 
 
@@ -111,5 +115,30 @@ namespace Dotel2.Pages
             return RedirectToPage(new { Id = NewReview.RentalId });
 
         }
+        public IActionResult OnPost(int id)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            
+            if (userId == null) return RedirectToPage("/Login/Index");
+            int usrId = userId.Value;
+            var targetUserId = repository.GetRental(id).UserId;
+            Conversations conversation= userRepository.getConversationByUserId(usrId, targetUserId);
+            if (conversation == null)
+            {
+                conversation = new Conversations
+                {
+                    CreatedAt = DateTime.Now,
+                    User1Id = usrId,
+                    User2Id = targetUserId,
+
+                };
+                userRepository.createNewConvesation(conversation);
+                 
+            }
+            TempData["ConversationId"] = conversation.ConversationId;
+            return RedirectToPage("Message");
+
+        }
     }
+    
 }

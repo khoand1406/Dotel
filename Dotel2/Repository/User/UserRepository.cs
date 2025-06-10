@@ -16,22 +16,24 @@ namespace Dotel2.Repository.User
                 .Any(ship => ship.UserId == user.UserId && ship.EndDate> DateTime.UtcNow );
         }
 
-        public List<Conversations> getConversationsByUserId(int userIdFrom)
+        public void createNewConvesation(Conversations conversations)
         {
-            return context.Conversations.Where
-                (conv=> conv.User1Id == userIdFrom)
+            context.Conversations.Add(conversations);
+            context.SaveChanges();
+        }
+
+        public Conversations getConversationByUserId(int userIdFrom, int userIdTo)
+        {
+            return context.Conversations.FirstOrDefault
+                (conv => conv.User1Id == userIdFrom && conv.User2Id == userIdTo);
+                
+        }
+
+        public List<Conversations> getConversationsByUserId(int userId)
+        {
+            return context.Conversations.Where(conv=> conv.User1Id==userId)
                 .OrderBy(conv=> conv.CreatedAt)
                 .ToList();
-        }
-
-        public List<Message> getMessagesByConversationId(int conversationId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Message> getMessagesByUserId(int senderId, int receiver)
-        {
-            throw new NotImplementedException();
         }
 
         public Models.User getUserbyRentalId(int uId)
@@ -39,7 +41,7 @@ namespace Dotel2.Repository.User
             return context.Users.FirstOrDefault(user => user.UserId == uId);
         }
 
-        public void SendMessage(Message message, int senderId, int receiver)
+        public void SendMessage(Models.Message message, int senderId, int receiver)
         {
             throw new NotImplementedException();
         }
