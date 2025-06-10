@@ -177,10 +177,13 @@
     </div>
 
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    
+    <div>
+        <form method="post" asp-page-handler="StartConversation">
+            <input type="hidden" value="@Model.Rental.UserId" name="targetUserId" />
+            <button id="open-chat" class="chat-open-btn">💬 Chat</button>
+        </form>
+    </div>
 
-    <!-- Nút mở chat -->
-    <button id="open-chat" class="chat-open-btn">💬 Chat</button>
     <script>
         window.recipientId = @Model.Rental.UserId;
     </script>
