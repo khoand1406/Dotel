@@ -1,4 +1,5 @@
-﻿using Dotel2.Models;
+﻿using Dotel2.DTOs;
+using Dotel2.Models;
 
 namespace Dotel2.Repository.User
 {
@@ -9,9 +10,9 @@ namespace Dotel2.Repository.User
 
         public void createNewConvesation(Conversations conversations);
         public Conversations getConversationByUserId(int userIdFrom, int userIdTo);
-        public Conversations GetConversation(int conversationId);
+        public ConversationDTO GetConversation(int conversationId, int currentUserId);
 
-        public List<Conversations> getConversationsByUserId(int userId);
+        public List<ConversationDTO> getConversationsByUserId(int userId);
         
     }
 }

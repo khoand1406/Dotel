@@ -1,3 +1,4 @@
+using Dotel2.DTOs;
 using Dotel2.Models;
 using Dotel2.Repository.Message;
 using Dotel2.Repository.User;
@@ -17,8 +18,8 @@ namespace Dotel2.Pages.Message
             this.messageRepository = repository;
         }
 
-        public List<Conversations> Conversations { get; set; } = new();
-        public Conversations? ActiveConversation { get; set; }
+        public List<ConversationDTO> Conversations { get; set; } = new();
+        public ConversationDTO? ActiveConversation { get; set; }
         public List<Dotel2.Models.Message> Messages { get; set; } = new();
         public User? CurrentUser { get; set; }
 
@@ -36,7 +37,7 @@ namespace Dotel2.Pages.Message
             Conversations= _userRepository.getConversationsByUserId(CurrentUser.UserId);
             if (TempData["ConversationId"] is int conversationId)
             {
-                ActiveConversation= _userRepository.GetConversation(conversationId);
+                ActiveConversation= _userRepository.GetConversation(conversationId, CurrentUser.UserId);
                 Messages= messageRepository.getMessagesByConversationId(conversationId);
 
             }

@@ -30,6 +30,8 @@ namespace Dotel2.Models
         public DbSet<UserMembership> UserMemberships { get; set; }
 
         public DbSet<Conversations> Conversations { get; set; }
+
+        public DbSet<ReadConversation> UserConversationReads { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
@@ -316,6 +318,9 @@ namespace Dotel2.Models
             modelBuilder.Entity<Review>()
                 .HasIndex(r => new { r.RentalId, r.UserId })
                 .IsUnique();
+
+            modelBuilder.Entity<ReadConversation>()
+            .HasKey(r => new { r.ConversationId, r.UserId });
 
             OnModelCreatingPartial(modelBuilder);
         }
