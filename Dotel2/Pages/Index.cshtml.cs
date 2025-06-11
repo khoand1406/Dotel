@@ -10,7 +10,7 @@ namespace Dotel2.Pages
     public class IndexModel : PageModel
     {
 
-        private readonly ILogger<IndexModel> _logger;
+        
         private readonly IRentalRepository rentalRepository;
         private readonly DotelDBContext _context;
         public IndexModel(IRentalRepository repository, DotelDBContext context)

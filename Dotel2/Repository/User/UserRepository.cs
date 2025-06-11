@@ -1,5 +1,7 @@
 ﻿
+using Dotel2.DTOs;
 using Dotel2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dotel2.Repository.User
 {
@@ -22,9 +24,39 @@ namespace Dotel2.Repository.User
             context.SaveChanges();
         }
 
-        public Conversations GetConversation(int conversationId)
+        public ConversationDTO GetConversation(int conversationId, int currentUserId)
         {
-            return context.Conversations.FirstOrDefault(conv => conv.ConversationId == conversationId);
+            var conversation = context.Conversations
+         .Include(c => c.User1)
+         .Include(c => c.User2)
+         .Include(c => c.Messages)
+         .FirstOrDefault(c => c.ConversationId == conversationId);
+
+            if (conversation == null) return null;
+
+            
+            var lastReadAt = context.UserConversationReads
+                .Where(r => r.ConversationId == conversationId && r.UserId == currentUserId)
+                .Select(r => (DateTime?)r.LastReadAt)
+                .FirstOrDefault();
+
+            
+            int unreadCount = conversation.Messages
+                .Where(m => m.SenderId != currentUserId &&
+                            (lastReadAt == null || m.SentAt > lastReadAt))
+                .Count();
+
+            return new ConversationDTO
+            {
+                Id = conversation.ConversationId,
+                User1Id = conversation.User1Id,
+                User2Id = conversation.User2Id,
+                User1 = conversation.User1,
+                User2 = conversation.User2,
+                OtherUser = (conversation.User1Id == currentUserId) ? conversation.User2 : conversation.User1,
+                LastMessage = conversation.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault(),
+                UnreadCount = unreadCount
+            };
         }
 
         public Conversations getConversationByUserId(int userIdFrom, int userIdTo)
@@ -34,11 +66,28 @@ namespace Dotel2.Repository.User
                 
         }
 
-        public List<Conversations> getConversationsByUserId(int userId)
+        public List<ConversationDTO> getConversationsByUserId(int userId)
         {
-            return context.Conversations.Where(conv=> conv.User1Id==userId)
-                .OrderBy(conv=> conv.CreatedAt)
+            var conversations= context.Conversations.Include(conv => conv.User1)
+                .Include(conv => conv.User2)
+                .Include(conv => conv.Messages)
+                .Select(conv => new ConversationDTO
+                {
+                    Id = conv.ConversationId,
+                    User1Id = conv.User1Id,
+                    User2Id = conv.User2Id,
+                    User1 = conv.User1,
+                    User2 = conv.User2,
+                    LastMessage = conv.Messages.OrderByDescending(msg => msg.SentAt).FirstOrDefault(),
+                    OtherUser = conv.User1Id == userId ? conv.User2 : conv.User1,
+                    UnreadCount = conv.Messages.Where(msg => msg.SenderId != userId)
+                                              .Count(msg => msg.SentAt > context.UserConversationReads
+                                                                  .Where(r => r.ConversationId == conv.ConversationId && r.UserId == userId)
+                                                                  .Select(r => r.LastReadAt).FirstOrDefault())
+                }).Where(conv => conv.User1Id == userId || conv.User2Id == userId)
                 .ToList();
+            return conversations;
+
         }
 
         public Models.User getUserbyRentalId(int uId)
