@@ -1,4 +1,5 @@
 using Dotel2.Models;
+using Dotel2.Repository.Message;
 using Dotel2.Repository.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,10 +10,11 @@ namespace Dotel2.Pages.Message
     public class MessageModel : PageModel
     {
         private readonly IUserRepository _userRepository;
-
-        public MessageModel(IUserRepository userRepository)
+        private readonly IMessageRepository messageRepository;
+        public MessageModel(IUserRepository userRepository, IMessageRepository repository)
         {
             _userRepository = userRepository;
+            this.messageRepository = repository;
         }
 
         public List<Conversations> Conversations { get; set; } = new();
@@ -32,6 +34,17 @@ namespace Dotel2.Pages.Message
             
             CurrentUser = JsonConvert.DeserializeObject<User>(userJson);
             Conversations= _userRepository.getConversationsByUserId(CurrentUser.UserId);
+            if (TempData["ConversationId"] is int conversationId)
+            {
+                ActiveConversation= _userRepository.GetConversation(conversationId);
+                Messages= messageRepository.getMessagesByConversationId(conversationId);
+
+            }
+            else
+            {
+                return RedirectToPage("/Error.cshtml");
+            }
+            
 
             return Page();
 

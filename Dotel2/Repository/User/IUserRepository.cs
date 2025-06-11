@@ -9,6 +9,7 @@ namespace Dotel2.Repository.User
 
         public void createNewConvesation(Conversations conversations);
         public Conversations getConversationByUserId(int userIdFrom, int userIdTo);
+        public Conversations GetConversation(int conversationId);
 
         public List<Conversations> getConversationsByUserId(int userId);
         

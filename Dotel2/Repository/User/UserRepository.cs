@@ -22,6 +22,11 @@ namespace Dotel2.Repository.User
             context.SaveChanges();
         }
 
+        public Conversations GetConversation(int conversationId)
+        {
+            return context.Conversations.FirstOrDefault(conv => conv.ConversationId == conversationId);
+        }
+
         public Conversations getConversationByUserId(int userIdFrom, int userIdTo)
         {
             return context.Conversations.FirstOrDefault
