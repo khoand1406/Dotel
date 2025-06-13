@@ -1,5 +1,6 @@
-using Dotel2.DTOs;
+﻿using Dotel2.DTOs;
 using Dotel2.Models;
+using Dotel2.Repository.Conversation;
 using Dotel2.Repository.Message;
 using Dotel2.Repository.User;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,11 @@ namespace Dotel2.Pages.Message
 {
     public class MessageModel : PageModel
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IConversationRepository _conversationRepository;
         private readonly IMessageRepository messageRepository;
-        public MessageModel(IUserRepository userRepository, IMessageRepository repository)
+        public MessageModel(IConversationRepository conversationRepository, IMessageRepository repository)
         {
-            _userRepository = userRepository;
+            _conversationRepository = conversationRepository;
             this.messageRepository = repository;
         }
 
@@ -25,6 +26,10 @@ namespace Dotel2.Pages.Message
 
         [BindProperty(SupportsGet = true)]
         public int? Id { get; set; }
+
+
+        [BindProperty]
+        public string MessageContent { get; set; }
         public IActionResult OnGet()
         {
             var userJson = HttpContext.Session.GetString("userJson");
@@ -34,10 +39,10 @@ namespace Dotel2.Pages.Message
             }
             
             CurrentUser = JsonConvert.DeserializeObject<User>(userJson);
-            Conversations= _userRepository.getConversationsByUserId(CurrentUser.UserId);
+            Conversations= _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
             if (TempData["ConversationId"] is int conversationId)
             {
-                ActiveConversation= _userRepository.GetConversation(conversationId, CurrentUser.UserId);
+                ActiveConversation= _conversationRepository.GetConversation(conversationId, CurrentUser.UserId);
                 Messages= messageRepository.getMessagesByConversationId(conversationId);
 
             }
@@ -50,6 +55,37 @@ namespace Dotel2.Pages.Message
             return Page();
 
 
+        }
+        public IActionResult OnPostSendMessage(int ConversationId)
+        {
+            var userJson = HttpContext.Session.GetString("userJson");
+            if (string.IsNullOrEmpty(userJson))
+            {
+                return RedirectToPage("/Login/Index");
+            }
+
+            CurrentUser = JsonConvert.DeserializeObject<User>(userJson);
+
+            if (string.IsNullOrWhiteSpace(MessageContent))
+            {
+                // Có thể xử lý lỗi nhập trống tại đây
+                return RedirectToPage();
+            }
+
+            
+            var message = new Models.Message
+            {
+                Content = MessageContent,
+                SentAt = DateTime.Now,
+                SenderId = CurrentUser.UserId,
+                ConversationId = ConversationId,
+                
+            };
+            messageRepository.SendMessage(message);
+            ActiveConversation = _conversationRepository.GetConversation(ConversationId, CurrentUser.UserId);
+            Messages = messageRepository.getMessagesByConversationId(ConversationId);
+
+            return Page();
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using Dotel2.Models;
+﻿using Dotel2.DTOs;
+using Dotel2.Models;
 using Dotel2.Repository.Rental;
 using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
+using Dotel2.Service.Chat;
+using Dotel2.Service.Chat.Conversations;
 using Dotel2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,20 +19,18 @@ namespace Dotel2.Pages
         
         private readonly IReviewRepository reviewRepository;
 
-        private readonly IUserRepository userRepository;
-        public RentHomeDetailsModel(IRentalRepository repo, IUserRepository userRepository, IReviewRepository reviewRepo)
+        private readonly IChatService _chatService;
+        public RentHomeDetailsModel(IChatService chatService, IRentalRepository repo,IReviewRepository reviewRepo)
         {
             repository = repo;
             
             this.reviewRepository = reviewRepo;
 
-            this.userRepository = userRepository;
+            _chatService = chatService;
         }
 
-
-
         public Rental Rental { get; set; }
-        //Thanh
+        
         public string? userSessionTime { get; set; }
         //
         public User User { get; set; }
@@ -115,29 +116,16 @@ namespace Dotel2.Pages
             return RedirectToPage(new { Id = NewReview.RentalId });
 
         }
-        public IActionResult OnPost(int id)
+        
+        public IActionResult OnPostStartConversation(int targetUserId)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            
+
             if (userId == null) return RedirectToPage("/Login/Index");
-            int usrId = userId.Value;
-            var targetUserId = repository.GetRental(id).UserId;
-            Conversations conversation= userRepository.getConversationByUserId(usrId, targetUserId);
-            if (conversation == null)
-            {
-                conversation = new Conversations
-                {
-                    CreatedAt = DateTime.Now,
-                    User1Id = usrId,
-                    User2Id = targetUserId,
+            var conversationDto = _chatService.GetOrCreateConversation(userId.Value, targetUserId);
 
-                };
-                userRepository.createNewConvesation(conversation);
-                 
-            }
-            TempData["ConversationId"] = conversation.ConversationId;
-            return RedirectToPage("Message");
-
+            TempData["ConversationId"] = conversationDto.Id;
+            return new JsonResult(new { success = true });
         }
     }
     
