@@ -1,9 +1,12 @@
 using Dotel2.Models;
+using Dotel2.Repository.Conversation;
 using Dotel2.Repository.MemberShip;
 using Dotel2.Repository.Message;
 using Dotel2.Repository.Rental;
 using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
+using Dotel2.Service.Chat;
+using Dotel2.Service.Chat.Conversations;
 using EXE_Dotel.Repository.Rental;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRespository>();
 builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IConversationService, ConversationServices>();
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();

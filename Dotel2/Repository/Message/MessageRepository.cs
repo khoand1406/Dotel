@@ -19,9 +19,10 @@ namespace Dotel2.Repository.Message
             throw new NotImplementedException();
         }
 
-        public void SendMessage(Models.Message message, int senderId, int receiver)
+        public void SendMessage(Models.Message message)
         {
-            throw new NotImplementedException();
+            dbContext.Messages.Add(message);
+            dbContext.SaveChanges();
         }
     }
 }
