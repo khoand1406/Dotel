@@ -8,12 +8,14 @@ using Dotel2.Repository.User;
 using Dotel2.Service.Chat;
 using Dotel2.Service.Chat.Conversations;
 using EXE_Dotel.Repository.Rental;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<DotelDBContext>();
+builder.Services.AddDbContext<DotelDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 builder.Services.AddSession();
 builder.Services.AddScoped<IRentalRepository, RentalRepostiory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
