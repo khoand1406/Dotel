@@ -1,31 +1,39 @@
 ﻿using Dotel2.Models;
 using Dotel2.Repository.User;
+using Dotel2.Service.Chat.Conversations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Dotel2.Controllers
 {
     [ApiController]
-    [Route("/api/messages/conversations")]
+    [Route("/api/conversations/get-all")]
     public class ConversationController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IConversationService _conversationService;
 
-        public ConversationController(IUserRepository userRepository)
+        public ConversationController(IConversationService conversationService)
         {
-            _userRepository = userRepository;
+            _conversationService= conversationService;
         }
-        [HttpGet]
-        public IActionResult getConversations()
+        [HttpPost]
+        public IActionResult getConversations([FromBody] int targetUserid)
         {
             var userJson = HttpContext.Session.GetString("userJson");
             if(string.IsNullOrEmpty(userJson)) {
                 return Unauthorized("Người dùng chưa đăng nhập");
             }
-
-            var user = JsonConvert.DeserializeObject<User>(userJson);
-            return Ok(user);
-
+            try
+            {
+                var user = JsonConvert.DeserializeObject<User>(userJson);
+                var conversations = _conversationService.GetOrCreateConversation(user.UserId, targetUserid);
+                return Ok(conversations);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest("Sai user format! Vui long dang nhap lai");
+            }
+            
         }
     }
 }
