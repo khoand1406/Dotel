@@ -123,9 +123,13 @@ namespace Dotel2.Pages
 
             if (userId == null) return RedirectToPage("/Login/Index");
             var conversationDto = _chatService.GetOrCreateConversation(userId.Value, targetUserId);
-
-            TempData["ConversationId"] = conversationDto.Id;
-            return new JsonResult(new { success = true });
+            Console.WriteLine("aaaaaaa"+ conversationDto);
+            if (conversationDto != null)
+            {
+                HttpContext.Session.SetInt32("ActiveConversationId", conversationDto.Id);
+                return new JsonResult(new { success = true });
+            }
+            return new JsonResult(new { success = false });
         }
     }
     

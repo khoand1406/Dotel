@@ -32,39 +32,27 @@ namespace Dotel2.Pages.Message
         public string MessageContent { get; set; }
         public IActionResult OnGet()
         {
-            var userJson = HttpContext.Session.GetString("userJson");
-            if (string.IsNullOrEmpty(userJson))
-            {
-                return RedirectToPage("/Login/Index");
-            }
-            
-            CurrentUser = JsonConvert.DeserializeObject<User>(userJson);
-            Conversations= _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
-            if (TempData["ConversationId"] is int conversationId)
-            {
-                ActiveConversation= _conversationRepository.GetConversation(conversationId, CurrentUser.UserId);
-                Messages= messageRepository.getMessagesByConversationId(conversationId);
 
+
+            CurrentUser = getUserInfo();
+            Conversations= _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
+            var conversationId = HttpContext.Session.GetInt32("ActiveConversationId");
+            if (conversationId == null)
+            {
+                return RedirectToPage("/Error");
             }
             else
             {
-                return RedirectToPage("/Error.cshtml");
+                ActiveConversation = _conversationRepository.GetConversation(conversationId.Value, CurrentUser.UserId);
+                Messages = messageRepository.getMessagesByConversationId(conversationId.Value);
             }
-            
 
             return Page();
-
 
         }
         public IActionResult OnPostSendMessage(int ConversationId)
         {
-            var userJson = HttpContext.Session.GetString("userJson");
-            if (string.IsNullOrEmpty(userJson))
-            {
-                return RedirectToPage("/Login/Index");
-            }
-
-            CurrentUser = JsonConvert.DeserializeObject<User>(userJson);
+            CurrentUser = getUserInfo();
 
             if (string.IsNullOrWhiteSpace(MessageContent))
             {
@@ -83,9 +71,36 @@ namespace Dotel2.Pages.Message
             };
             messageRepository.SendMessage(message);
             ActiveConversation = _conversationRepository.GetConversation(ConversationId, CurrentUser.UserId);
+            Conversations = _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
             Messages = messageRepository.getMessagesByConversationId(ConversationId);
 
             return Page();
+        }
+
+        public IActionResult OnPostOpenConversation(int ConversationId)
+        {
+            CurrentUser = getUserInfo();
+
+            if (CurrentUser == null)
+            {
+                return RedirectToPage("/Login/Index");
+            }
+
+            Conversations = _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
+            ActiveConversation = _conversationRepository.GetConversation(ConversationId, CurrentUser.UserId);
+            Messages = messageRepository.getMessagesByConversationId(ConversationId);
+
+            return Page();
+        }
+
+        private User? getUserInfo()
+        {
+            var userJson = HttpContext.Session.GetString("userJson");
+            if (string.IsNullOrEmpty(userJson))
+            {
+                RedirectToPage("/Login/Index");
+            }
+            return JsonConvert.DeserializeObject<User>(userJson);
         }
     }
 }
