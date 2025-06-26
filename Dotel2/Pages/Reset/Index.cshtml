@@ -2,49 +2,93 @@
 @model Dotel2.Pages.Reset.IndexModel
 @{
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt lại mật khẩu</title>
+    <link rel="stylesheet" href="css/loginsignin.css" />
+    <script src="https://kit.fontawesome.com/682f180637.js" crossorigin="anonymous"></script>
+</head>
 <body>
-    <div class="limiter">
-        <div class="container-login100" style="background-image: url('images/bg-01.jpg');">
-            <div class="wrap-login100">
-                <form method="post" class="login100-form validate-form">
-                    <span class="login100-form-title p-b-34 p-t-27">
-                        Reset Password
-                    </span>
+    <section class="userform">
+        <!--Bắt Đầu Phần Hình Ảnh-->
+        <div class="img-bg">
+            <img src="img/signinlogin.png" />
+        </div>
+        <!--Kết Thúc Phần Hình Ảnh-->
+        <!--Bắt Đầu Phần Nội Dung-->
+        <div class="noi-dung">
+            <div class="form1">
+                <h2>Đặt lại mật khẩu</h2>
+                <form method="post">
                     @if (TempData["ErrorMessage"] != null)
                     {
-                        <div class="alert alert-danger">
-                            @TempData["ErrorMessage"]
-                        </div>
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
                     }
-                    <div class="wrap-input100">
-                        <span class="input100" style="padding-top: 15px">@Model.Email</span>
-                        <span class="focus-input100" data-placeholder="&#xf207;"></span>
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+
+                    <div class="input-form">
+                        <span>Email đã xác minh</span>
+                        <input type="text" value="@Model.Email" disabled />
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Enter password">
-                        <input class="input100" type="password" name="Password" placeholder="Password" required>
-                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                    <div class="input-form">
+                        <span>Mật khẩu mới</span>
+                        <input asp-for="Password" type="password" placeholder="Nhập mật khẩu mới" required />
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Repeat password">
-                        <input class="input100" type="password" name="RepeatPassword" placeholder="Repeat Password" required>
-                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                    <div class="input-form">
+                        <span>Nhập lại mật khẩu</span>
+                        <input asp-for="RepeatPassword" type="password" placeholder="Nhập lại mật khẩu" required />
                     </div>
 
-                    <div class="container-login100-form-btn">
-                        <button id="submitBtn" class="login100-form-btn">
-                            Submit
-                        </button>
-                        <span id="countdown" style="margin-left: 10px;"></span>
+                    <div class="input-form">
+                        <input style="background-color: sandybrown; color: black" type="submit" value="Xác nhận">
                     </div>
 
-                    <div class="text-center p-t-90">
-                        <a class="txt1" href="login">
-                            Sign In
-                        </a>
+                    <div class="input-form">
+                        <p><a href="/Register">Quay lại trang đăng ký</a> hoặc <a href="/Login">Đăng nhập</a></p>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+        <!--Kết Thúc Phần Nội Dung-->
+    </section>
 </body>
+</html>
+
+<style>
+    /* Định nghĩa lớp chung cho alert */
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    /* Thông báo lỗi */
+    .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+
+    /* Thông báo thành công */
+    .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+
+    input[disabled] {
+        background-color: #eee;
+        color: #666;
+    }
+</style>

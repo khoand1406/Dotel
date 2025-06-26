@@ -7,6 +7,8 @@ using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
 using Dotel2.Service.Chat;
 using Dotel2.Service.Chat.Conversations;
+using Dotel2.Service.Mail;
+using Dotel2.SignalR;
 using EXE_Dotel.Repository.Rental;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,9 +28,14 @@ builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IConversationService, ConversationServices>();
+
+builder.Services.AddScoped<ISendMailService, SendMailService>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -51,5 +58,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.MapControllers();
+
+app.MapHub<MessageHub>("/messageHub");
 
 app.Run();

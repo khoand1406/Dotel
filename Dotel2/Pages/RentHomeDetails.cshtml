@@ -103,6 +103,15 @@
                     }
 
                     <hr />
+                    @if (Model.userSessionTime != null)
+                    {
+                        <form method="post" asp-page-handler="StartConversation" id="start-conversation-form" class="mt-3 mb-3">
+                            <input type="hidden" name="targetUserId" value="@Model.Rental.UserId" />
+                            <button id="open-chat" class="btn btn-outline-success w-100">
+                                💬 Nhắn tin với người đăng
+                            </button>
+                        </form>
+                    }
                     <a href="/Index" class="btn btn-outline-primary w-100">⬅ Trở về danh sách</a>
                 </div>
                 <h4 class="text-primary text-center mt-4 mb-3">Đánh giá của người dùng</h4>
@@ -177,15 +186,7 @@
     </div>
 
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    @if (Model.userSessionTime != null)
-    {
-        <div>
-            <form method="post" asp-page-handler="StartConversation" id="start-conversation-form">
-                <input type="hidden" value="@Model.Rental.UserId" name="targetUserId" />
-                <button id="open-chat" class="chat-open-btn">💬 Chat</button>
-            </form>
-        </div>
-    }
+    
     
     <script>
         window.recipientId = @Model.Rental.UserId;

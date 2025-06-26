@@ -10,78 +10,85 @@ namespace Dotel2.Pages.Reset
     public class IndexModel : PageModel
     {
         private readonly DotelDBContext _context;
+
         public IndexModel(DotelDBContext context)
         {
             _context = context;
         }
+
         [BindProperty] public string Email { get; set; }
+        [BindProperty] public string Password { get; set; }
+        [BindProperty] public string RepeatPassword { get; set; }
+
         public IActionResult OnGet()
         {
             var forgot = HttpContext.Session.GetString("forgot");
-
             var userVerification = HttpContext.Session.GetString("userVerification");
+
             if (string.IsNullOrEmpty(userVerification))
             {
-                if (forgot != null && forgot == "1")
-                {
-                    return RedirectToPage("/ForgotPassword/index");
-                }
-
-                return RedirectToPage("/Login/index");
+                return forgot == "1"
+                    ? RedirectToPage("/ForgotPassword/Index")
+                    : RedirectToPage("/Login/Index");
             }
+
+            var user = JsonConvert.DeserializeObject<User>(userVerification);
+            Email = user?.Email;
+
             return Page();
         }
 
         public IActionResult OnPost()
         {
-
             var forgot = HttpContext.Session.GetString("forgot");
-
             var userVerification = HttpContext.Session.GetString("userVerification");
+
             if (string.IsNullOrEmpty(userVerification))
             {
-                if (forgot != null && forgot == "1")
-                {
-                    return RedirectToPage("/ForgotPassword/index");
-                }
-
-                return RedirectToPage("/Login/index");
-            }else
-            {
-                var user = JsonConvert.DeserializeObject<User>(userVerification);
-                Email = user.Email;
+                return forgot == "1"
+                    ? RedirectToPage("/ForgotPassword/Index")
+                    : RedirectToPage("/Login/Index");
             }
 
-            var emailExist = _context.Users.FirstOrDefault(s => s.Email.Equals(Email));
+            var userSession = JsonConvert.DeserializeObject<User>(userVerification);
+            Email = userSession?.Email;
 
-            if (emailExist == null)
+            if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepeatPassword))
             {
-                return RedirectToPage("/forgotpassword/index");
+                TempData["ErrorMessage"] = "Password fields cannot be empty.";
+                return Page();
             }
 
-            if (!Request.Form["Password"].Equals(Request.Form["RepeatPassword"]))
+            if (!Password.Equals(RepeatPassword))
             {
                 TempData["ErrorMessage"] = "Passwords do not match.";
                 return Page();
             }
 
-            var hashedPassword = GetHashedPassword(Request.Form["Password"]);
-            emailExist.Password = hashedPassword;
+            var emailExist = _context.Users.FirstOrDefault(s => s.Email.Equals(Email));
+            if (emailExist == null)
+            {
+                return RedirectToPage("/ForgotPassword/Index");
+            }
+
+            emailExist.Password = GetHashedPassword(Password);
             _context.SaveChanges();
 
-            TempData["SuccessMessage"] = "Chagne password successfully.";
-            return RedirectToPage("/login/index");
+            TempData["SuccessMessage"] = "Change password successfully.";
+            HttpContext.Session.Remove("userVerification");
+            HttpContext.Session.Remove("forgot");
+
+            return RedirectToPage("/Login/Index");
         }
+
         private string GetHashedPassword(string password)
         {
-            using (SHA256 sha256Hash = SHA256.Create())
+            using (var sha256 = SHA256.Create())
             {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var builder = new StringBuilder();
+                foreach (var b in bytes)
+                    builder.Append(b.ToString("x2"));
                 return builder.ToString();
             }
         }

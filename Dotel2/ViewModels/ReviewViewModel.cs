@@ -1,4 +1,4 @@
-﻿namespace Dotel2.ViewModels
+﻿                  namespace Dotel2.ViewModels
 {
     public class ReviewViewModel
     {
