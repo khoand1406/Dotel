@@ -59,7 +59,7 @@ namespace Dotel2.Pages.ForgotPassword
 
                 if (!success)
                 {
-                    var body = await response.Body.ReadAsStringAsync();
+                    
                     // Log lỗi để debug
                     Console.WriteLine($"SendGrid failed: {body}");
                 }
