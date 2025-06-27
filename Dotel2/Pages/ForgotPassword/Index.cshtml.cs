@@ -4,6 +4,7 @@ using Dotel2.Service.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using SendGrid;
 using System.Security.Cryptography;
 
 namespace Dotel2.Pages.ForgotPassword
@@ -55,6 +56,13 @@ namespace Dotel2.Pages.ForgotPassword
                            $"<p>Mã có hiệu lực trong 1 giờ.</p>";
 
                 var success = await _sendMailService.SendEmailAsync(user.Email, subject, body);
+
+                if (!success)
+                {
+                    var body = await response.Body.ReadAsStringAsync();
+                    // Log lỗi để debug
+                    Console.WriteLine($"SendGrid failed: {body}");
+                }
 
                 if (!success)
                 {
