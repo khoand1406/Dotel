@@ -18,21 +18,21 @@ namespace Dotel2.Repository.Conversation
             context.SaveChanges();
         }
 
-        public ConversationDTO GetConversation(int conversationId, int currentUserId)
+        public async Task<ConversationDTO> GetConversation(int conversationId, int currentUserId)
         {
-            var conversation = context.Conversations
+            var conversation = await context.Conversations
          .Include(c => c.User1)
          .Include(c => c.User2)
          .Include(c => c.Messages)
-         .FirstOrDefault(c => c.ConversationId == conversationId);
+         .FirstOrDefaultAsync(c => c.ConversationId == conversationId);
 
             if (conversation == null) return null;
 
 
-            var lastReadAt = context.UserConversationReads
+            var lastReadAt = await context.UserConversationReads
                 .Where(r => r.ConversationId == conversationId && r.UserId == currentUserId)
                 .Select(r => (DateTime?)r.LastReadAt)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
 
             int unreadCount = conversation.Messages
@@ -89,37 +89,53 @@ namespace Dotel2.Repository.Conversation
 
         }
 
-        public List<ConversationDTO> getConversationsByUserId(int userId)
+        public async Task<List<ConversationDTO>> getConversationsByUserId(int userId)
         {
-            var conversations = context.Conversations.Include(conv => conv.User1)
-                .Include(conv => conv.User2)
-                .Include(conv => conv.Messages)
-                .Select(conv => new ConversationDTO
+            var conversations = await context.Conversations
+        .Include(c => c.User1)
+        .Include(c => c.User2)
+        .Include(c => c.Messages)
+        .Where(c => c.User1Id == userId || c.User2Id == userId)
+        .ToListAsync();
+
+            
+            var readTimes = await context.UserConversationReads
+                .Where(r => r.UserId == userId)
+                .ToDictionaryAsync(r => r.ConversationId, r => r.LastReadAt);
+
+            
+            var result = conversations.Select(conv =>
+            {
+                readTimes.TryGetValue(conv.ConversationId, out DateTime lastReadAt);
+
+                int unreadCount = conv.Messages
+                    .Where(m => m.SenderId != userId && m.SentAt > lastReadAt)
+                    .Count();
+
+                return new ConversationDTO
                 {
                     Id = conv.ConversationId,
                     User1Id = conv.User1Id,
                     User2Id = conv.User2Id,
                     User1 = conv.User1,
                     User2 = conv.User2,
-                    LastMessage = conv.Messages.OrderByDescending(msg => msg.SentAt).FirstOrDefault(),
                     OtherUser = conv.User1Id == userId ? conv.User2 : conv.User1,
-                    UnreadCount = conv.Messages.Where(msg => msg.SenderId != userId)
-                                              .Count(msg => msg.SentAt > context.UserConversationReads
-                                                                  .Where(r => r.ConversationId == conv.ConversationId && r.UserId == userId)
-                                                                  .Select(r => r.LastReadAt).FirstOrDefault())
-                }).Where(conv => conv.User1Id == userId || conv.User2Id == userId)
-                .ToList();
-            return conversations;
+                    LastMessage = conv.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault(),
+                    UnreadCount = unreadCount
+                };
+            }).ToList();
+
+            return result;
 
         }
 
-        public ConversationDTO getOrCreateConversation(int currUserId, int targetUserId)
+        public async Task<ConversationDTO> getOrCreateConversation(int currUserId, int targetUserId)
         {
-            var conversation = context.Conversations
+            var conversation = await context.Conversations
             .Include(c => c.User1)
             .Include(c => c.User2)
             .Include(c => c.Messages)
-            .FirstOrDefault(c =>
+            .FirstOrDefaultAsync(c =>
                 (c.User1Id == currUserId && c.User2Id == targetUserId) ||
                 (c.User1Id == targetUserId && c.User2Id == currUserId));
 
@@ -133,14 +149,15 @@ namespace Dotel2.Repository.Conversation
                 };
 
                 context.Conversations.Add(conversation);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
+                Console.WriteLine("Taoooooooooooooooooooooooooo");
                 // Load navigation properties
-                conversation = context.Conversations
+                conversation = await context.Conversations
                     .Include(c => c.User1)
                     .Include(c => c.User2)
                     .Include(c => c.Messages)
-                    .FirstOrDefault(c => c.ConversationId == conversation.ConversationId);
+                    .FirstOrDefaultAsync(c => c.ConversationId == conversation.ConversationId);
             }
 
             return new ConversationDTO
@@ -153,6 +170,30 @@ namespace Dotel2.Repository.Conversation
                 OtherUser = (conversation.User1Id == currUserId) ? conversation.User2 : conversation.User1,
                 LastMessage = conversation.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault()
             };
+        }
+
+        public async Task UpdateReadTime(int conversationId, int userId)
+        {
+            
+            var existing = await context.UserConversationReads
+        .FirstOrDefaultAsync(rc => rc.ConversationId == conversationId && rc.UserId == userId);
+
+            if (existing == null)
+            {
+                context.UserConversationReads.Add(new ReadConversation
+                {
+                    ConversationId = conversationId,
+                    UserId = userId,
+                    LastReadAt = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                existing.LastReadAt = DateTime.UtcNow;
+                context.UserConversationReads.Update(existing);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

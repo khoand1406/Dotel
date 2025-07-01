@@ -39,6 +39,9 @@ namespace Dotel2.Models
         [JsonIgnore]
         public ICollection<Message> Messages { get; set; }= new List<Message>();
 
-        
+        [JsonIgnore]
+        public ICollection<ChatHistory> ChatHistories { get; set; } = new List<ChatHistory>();
+
+
     }
 }

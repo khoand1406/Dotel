@@ -5,6 +5,8 @@ using Dotel2.Repository.Message;
 using Dotel2.Repository.Rental;
 using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
+using Dotel2.Repository.User.ChatAI;
+using Dotel2.Service.AIChatService;
 using Dotel2.Service.Chat;
 using Dotel2.Service.Chat.Conversations;
 using Dotel2.Service.Mail;
@@ -25,6 +27,8 @@ builder.Services.AddScoped<IReviewRepository, ReviewRespository>();
 builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<IOpenAiChatService, OpenAIChatService>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IConversationService, ConversationServices>();

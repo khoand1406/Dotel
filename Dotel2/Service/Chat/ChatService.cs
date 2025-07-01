@@ -13,12 +13,12 @@ namespace Dotel2.Service.Chat
         {
             _conversationRepository = conversationRepository;
         }
-        public ConversationDTO GetOrCreateConversation(int currentUserId, int targetUserId)
+        public async Task<ConversationDTO> GetOrCreateConversation(int currentUserId, int targetUserId)
         {
             if (currentUserId == targetUserId)
                 throw new InvalidOperationException("Cannot chat with yourself");
 
-            var conversation = _conversationRepository.getOrCreateConversation(currentUserId, targetUserId);
+            var conversation = await _conversationRepository.getOrCreateConversation(currentUserId, targetUserId);
 
             return conversation;
         }

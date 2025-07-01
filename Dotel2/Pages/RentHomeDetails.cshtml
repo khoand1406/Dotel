@@ -206,7 +206,16 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    window.open("/Message/Message", "_blank", "width=500,height=700");
+                    // Mở cửa sổ mới
+                    const chatWindow = window.open("/Message/Message", "_blank", "width=500,height=700");
+
+                    // Đợi tab mới mở xong, gửi message
+                    const interval = setInterval(() => {
+                        if (chatWindow && chatWindow.postMessage) {
+                            chatWindow.postMessage({ conversationId: result.conv }, "*");
+                            clearInterval(interval);
+                        }
+                    }, 200);
                 }
             });
         </script>

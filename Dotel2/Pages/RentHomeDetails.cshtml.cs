@@ -117,17 +117,17 @@ namespace Dotel2.Pages
 
         }
         
-        public IActionResult OnPostStartConversation(int targetUserId)
+        public async Task<IActionResult> OnPostStartConversation(int targetUserId)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
 
-            if (userId == null) return RedirectToPage("/Login/Index");
-            var conversationDto = _chatService.GetOrCreateConversation(userId.Value, targetUserId);
+            if (userId == null) return BadRequest();
+            var conversationDto = await _chatService.GetOrCreateConversation(userId.Value, targetUserId);
             Console.WriteLine("aaaaaaa"+ conversationDto);
             if (conversationDto != null)
             {
                 HttpContext.Session.SetInt32("ActiveConversationId", conversationDto.Id);
-                return new JsonResult(new { success = true });
+                return new JsonResult(new { success = true, conv= conversationDto.Id });
             }
             return new JsonResult(new { success = false });
         }

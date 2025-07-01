@@ -19,6 +19,28 @@ namespace Dotel2.Repository.Message
             throw new NotImplementedException();
         }
 
+        public int getUnreadMessageCount(int userId)
+        {
+            var conversations = dbContext.Conversations
+        .Where(c => c.User1Id == userId || c.User2Id == userId)
+        .Select(c => c.ConversationId)
+        .ToList();
+
+            
+            var readMap = dbContext.UserConversationReads
+                .Where(rc => rc.UserId == userId)
+                .ToDictionary(rc => rc.ConversationId, rc => rc.LastReadAt);
+
+            
+            var unreadCount = dbContext.Messages
+                .Where(m => conversations.Contains(m.ConversationId) &&
+                            m.SenderId != userId &&
+                            (!readMap.ContainsKey(m.ConversationId) || m.SentAt > readMap[m.ConversationId]))
+                .Count();
+
+            return unreadCount;
+        }
+
         public void SendMessage(Models.Message message)
         {
             dbContext.Messages.Add(message);

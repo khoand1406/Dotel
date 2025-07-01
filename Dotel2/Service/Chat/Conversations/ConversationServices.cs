@@ -21,19 +21,24 @@ namespace Dotel2.Service.Chat.Conversations
             return _conversationRepository.getConversationByUserId(userIdFrom, userIdTo);
         }
 
-        public ConversationDTO GetConversation(int conversationId, int currentUserId)
+        public async Task<ConversationDTO> GetConversation(int conversationId, int currentUserId)
         {
-            return _conversationRepository.GetConversation(conversationId, currentUserId);
+            return  await _conversationRepository.GetConversation(conversationId, currentUserId);
         }
 
-        public List<ConversationDTO> GetConversationsByUserId(int userId)
+        public Task<List<ConversationDTO>> GetConversationsByUserId(int userId)
         {
             return _conversationRepository.getConversationsByUserId(userId);
         }
 
-        public ConversationDTO GetOrCreateConversation(int currUserId, int targetUserId)
+        public async Task<ConversationDTO> GetOrCreateConversation(int currUserId, int targetUserId)
         {
-            return _conversationRepository.getOrCreateConversation(currUserId, targetUserId);
+            return await _conversationRepository.getOrCreateConversation(currUserId, targetUserId);
+        }
+
+        public Task UpdateReadTime(int conversationId, int userId)
+        {
+            return _conversationRepository.UpdateReadTime(conversationId, userId);
         }
     }
 }

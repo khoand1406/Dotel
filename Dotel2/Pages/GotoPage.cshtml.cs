@@ -29,7 +29,7 @@ namespace Dotel2.Pages
             }
             else
             {
-                return RedirectToPage("/Subscription/MemberShip");
+                return RedirectToPage("/FormRentHome/Index");
             }
         }
     }

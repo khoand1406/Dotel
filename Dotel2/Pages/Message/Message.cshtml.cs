@@ -3,6 +3,7 @@ using Dotel2.Models;
 using Dotel2.Repository.Conversation;
 using Dotel2.Repository.Message;
 using Dotel2.Repository.User;
+using Dotel2.Service.Chat.Conversations;
 using Dotel2.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,12 +14,13 @@ namespace Dotel2.Pages.Message
 {
     public class MessageModel : PageModel
     {
-        private readonly IConversationRepository _conversationRepository;
+        private readonly IConversationService _conversationService;
         private readonly IMessageRepository messageRepository;
+        
         private readonly IHubContext<MessageHub> _hubContext;
-        public MessageModel(IConversationRepository conversationRepository, IMessageRepository repository, IHubContext<MessageHub> hubContext)
+        public MessageModel(IConversationService conversationService, IMessageRepository repository, IHubContext<MessageHub> hubContext)
         {
-            _conversationRepository = conversationRepository;
+            _conversationService = conversationService;
             this.messageRepository = repository;
             _hubContext = hubContext;
         }
@@ -34,18 +36,18 @@ namespace Dotel2.Pages.Message
 
         [BindProperty]
         public string MessageContent { get; set; }
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
             CurrentUser = getUserInfo();
-            Conversations= _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
+            Conversations= await _conversationService.GetConversationsByUserId(CurrentUser.UserId);
             var conversationId = HttpContext.Session.GetInt32("ActiveConversationId");
             if (conversationId == null)
             {
-                return RedirectToPage("/Error");
+                return Page();
             }
             else
             {
-                ActiveConversation = _conversationRepository.GetConversation(conversationId.Value, CurrentUser.UserId);
+                ActiveConversation = await _conversationService.GetConversation(conversationId.Value, CurrentUser.UserId);
                 Messages = messageRepository.getMessagesByConversationId(conversationId.Value);
             }
 
@@ -74,7 +76,7 @@ namespace Dotel2.Pages.Message
             messageRepository.SendMessage(message);
 
             // Lấy thông tin user còn lại trong conversation
-            var conversation = _conversationRepository.GetConversation(ConversationId, CurrentUser.UserId);
+            var conversation = _conversationService.GetConversation(ConversationId, CurrentUser.UserId).Result;
             var receiverId = (conversation.User1Id == CurrentUser.UserId)
                                 ? conversation.User2Id
                                 : conversation.User1Id;
@@ -89,26 +91,52 @@ namespace Dotel2.Pages.Message
 
             // Load lại data để render giao diện
             ActiveConversation = conversation;
-            Conversations = _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
+            Conversations = _conversationService.GetConversationsByUserId(CurrentUser.UserId).Result;
             Messages = messageRepository.getMessagesByConversationId(ConversationId);
 
             return RedirectToPage(new { ConversationId });
         }
 
-        public IActionResult OnPostOpenConversation(int ConversationId)
+        public async Task<IActionResult> OnPostOpenConversation()
         {
-            CurrentUser = getUserInfo();
+            using var reader = new StreamReader(Request.Body);
+            var body = await reader.ReadToEndAsync();
+            var data = JsonConvert.DeserializeObject<Dictionary<string, int>>(body);
+            var conversationId = data["conversationId"];
 
-            if (CurrentUser == null)
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return Unauthorized();
+
+            Conversations = await _conversationService.GetConversationsByUserId((int)userId);
+            ActiveConversation = await _conversationService.GetConversation(conversationId, (int)userId);
+
+            if (ActiveConversation == null)
+                return NotFound(new { success = false, message = "Conversation not found." });
+
+
+            var otherUser = ActiveConversation.User1Id == userId
+                ? ActiveConversation.User2
+                : ActiveConversation.User1;
+
+            Messages = messageRepository.getMessagesByConversationId(conversationId);
+
+            var messages = Messages.Select(m => new
             {
-                return RedirectToPage("/Login/Index");
-            }
+                content = m.Content,
+                sentAt = m.SentAt.ToString("HH:mm"),
+                isSent = m.SenderId == userId
+            });
 
-            Conversations = _conversationRepository.getConversationsByUserId(CurrentUser.UserId);
-            ActiveConversation = _conversationRepository.GetConversation(ConversationId, CurrentUser.UserId);
-            Messages = messageRepository.getMessagesByConversationId(ConversationId);
-
-            return Page();
+            return new JsonResult(new
+            {
+                success = true,
+                conversation = new
+                {
+                    id = ActiveConversation.Id,
+                    fullname = otherUser.Fullname
+                },
+                messages = messages
+            });
         }
 
         private User? getUserInfo()
@@ -137,7 +165,7 @@ namespace Dotel2.Pages.Message
             messageRepository.SendMessage(message);
 
             
-            var conv = _conversationRepository.GetConversation(input.ConversationId, CurrentUser.UserId);
+            var conv = _conversationService.GetConversation(input.ConversationId, CurrentUser.UserId).Result;
             var receiverId = conv.User1Id == CurrentUser.UserId ? conv.User2Id : conv.User1Id;
 
             var connId = MessageHub.GetConnectionId(receiverId);

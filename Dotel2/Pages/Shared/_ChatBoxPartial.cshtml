@@ -1,0 +1,84 @@
+﻿@{
+}
+<!-- Chat Toggle Button -->
+<div id="chat-toggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <button class="btn btn-primary rounded-circle p-3">💬</button>
+</div>
+
+<!-- Chat Box -->
+<div id="chat-box" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 350px; z-index: 9999;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            Hòa Lạc GPT
+            <button class="btn btn-sm btn-light" onclick="toggleChatBox()">✖</button>
+        </div>
+        <div class="card-body" id="chat-body" style="height: 300px; overflow-y: auto;"></div>
+        <div class="card-footer">
+            <input type="text" id="chat-input" class="form-control" placeholder="Nhập tin nhắn..." onkeydown="handleChatEnter(event)" />
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById("chat-toggle");
+    const chatBox = document.getElementById("chat-box");
+    const chatBody = document.getElementById("chat-body");
+    const chatInput = document.getElementById("chat-input");
+
+    toggleBtn.addEventListener("click", toggleChatBox);
+
+    function toggleChatBox() {
+        chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+        loadChatHistory();
+    }
+
+    async function loadChatHistory() {
+        chatBody.innerHTML = "<div class='text-center text-muted'>Đang tải...</div>";
+        try {
+            const res = await fetch("/api/chat/history");
+            const history = await res.json();
+            chatBody.innerHTML = "";
+            if (history.length != 0) {
+                history.forEach(msg => {
+                    const align = msg.sender === "user" ? "end" : "start";
+                    const badge = msg.sender === "user" ? "light text-dark" : "secondary text-white";
+                    appendMessage(msg.sender === "user" ? "Bạn" : "GPT", msg.message, align, badge);
+                });
+            }
+        } catch (e) {
+            chatBody.innerHTML = "<div class='text-danger text-center'>Không tải được lịch sử</div>";
+        }
+    }
+
+    function handleChatEnter(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendChatMessage();
+        }
+    }
+
+    async function sendChatMessage() {
+        const msg = chatInput.value;
+        if (!msg.trim()) return;
+
+        appendMessage("Bạn", msg, "end", "light text-dark");
+        chatInput.value = "";
+
+        const res = await fetch("/api/chat/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg })
+        });
+
+        const reply = await res.ok ? await res.text() : "Đã xảy ra lỗi!";
+        appendMessage("GPT", reply, "start", "secondary text-white");
+    }
+
+    function appendMessage(sender, content, align, badgeClass) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `mb-2 text-${align}`;
+        msgDiv.innerHTML = `<span class='badge bg-${badgeClass}'>${sender}: ${content}</span>`;
+        chatBody.appendChild(msgDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+</script>

@@ -12,27 +12,42 @@
     <link href="~/css/message.css" rel="stylesheet">
 </head>
 <body>
+    <form id="antiForgeryForm" style="display:none">
+        @Html.AntiForgeryToken()
+    </form>
     <div class="container-fluid h-100">
         <div class="row h-100">
             <!-- Sidebar -->
             <div class="col-12 col-md-4 col-lg-3 chat-sidebar">
                 <div class="search-box p-3">
-                    <input type="text" class="form-control" placeholder="Search conversations...">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search conversations...">
                 </div>
-                <div class="conversations-list">
+                
+                <div class="conversations-list" id="conversationsList">
+                    @if (!Model.Conversations.Any())
+                    {
+                        <div class="p-5 text-center text-muted">
+                            <h4>Bạn chưa có cuộc trò chuyện nào</h4>
+                            <p>Hãy truy cập một bài đăng và nhấn <b>“Liên hệ”</b> để bắt đầu trò chuyện với chủ nhà.</p>
+                        </div>
+                    }
                     @foreach (var conv in Model.Conversations)
                     {
                         var otherUser = conv.User1Id == Model.CurrentUser.UserId ? conv.User2 : conv.User1;
                         bool isActive = Model.ActiveConversation?.Id == conv.Id;
-
-                        <form method="post" asp-page-handler="OpenConversation">
-                            <input type="hidden" name="conversationId" value="@conv.Id" />
-                            <button type="submit" class="conversation-item p-3 w-100 text-start border-0 @(isActive ? "active" : "")">
+                        var senderName = conv.LastMessage?.SenderId == Model.CurrentUser.UserId
+                        ? "Bạn"
+                        : conv.LastMessage?.Sender?.Fullname ?? "";
+                        <div class="conversation-wrapper" data-name="@otherUser.Fullname.ToLower() @conv.LastMessage?.Content?.ToLower()">
+                            <button type="button" class="conversation-item p-3 w-100 text-start border-0 @(isActive ? "active" : "")"
+                                    onclick="openConversation(@conv.Id)">
                                 <div class="d-flex align-items-center">
-                                    <img src="/images/default-avatar.png" class="avatar" alt="User avatar">
+                                    <img src="~/img/default_avatar.png" class="avatar" alt="User avatar">
                                     <div class="ms-3 flex-grow-1">
                                         <h6 class="mb-0">@otherUser.Fullname</h6>
-                                        <p class="text-muted small mb-0">@conv.LastMessage?.Content</p>
+                                        <p class="text-muted small mb-0">
+                                            <strong>@senderName:</strong> @conv.LastMessage?.Content
+                                        </p>
                                     </div>
                                     <div class="text-end">
                                         @if (conv.UnreadCount > 0)
@@ -42,100 +57,217 @@
                                     </div>
                                 </div>
                             </button>
-                        </form>
+                        </div>
+                        
                     }
                 </div>
             </div>
 
             <!-- Chat Area -->
             <div class="col-12 col-md-8 col-lg-9 chat-main">
-                @if (Model.ActiveConversation != null)
-                {
-                    var otherUser = Model.ActiveConversation.User1Id == Model.CurrentUser.UserId
-                    ? Model.ActiveConversation.User2
-                    : Model.ActiveConversation.User1;
 
-                    <div class="chat-header p-3">
-                        <div class="d-flex align-items-center">
-                            <img src="/images/default-avatar.png" class="avatar" alt="User avatar">
-                            <div class="ms-3">
-                                <h5 class="mb-0">@otherUser.Fullname</h5>
-                                <small class="text-muted">Online</small>
-                            </div>
+                <div class="chat-header p-3">
+                    <div class="d-flex align-items-center">
+                        <img src="~/img/default_avatar.png" class="avatar" alt="User avatar">
+                        <div class="ms-3">
+                            <h5 class="mb-0" id="chatPartnerName">Chọn cuộc trò chuyện</h5>
+                            <small class="text-muted">Online</small>
                         </div>
                     </div>
+                </div>
 
-                    <div class="chat-messages p-3">
-                        @foreach (var msg in Model.Messages)
-                        {
-                            bool isSent = msg.SenderId == Model.CurrentUser.UserId;
-                            <div class="message @(isSent ? "sent" : "received")">
-                                <div class="message-content">
-                                    <p>@msg.Content</p>
-                                    <small class="text-muted">@msg.SentAt.ToString("HH:mm")</small>
-                                </div>
-                            </div>
-                        }
-                    </div>
+                <div class="chat-messages p-3" id="chatMessages">
+                    <div class="text-muted text-center">Chưa có tin nhắn nào</div>
+                </div>
+
 
                     <div class="chat-input p-3">
                         <form id="sendMessageForm">
                             <div class="input-group">
                                 @Html.AntiForgeryToken()
-                                <input type="hidden" name="conversationId" id="conversationId" value="@Model.ActiveConversation.Id" />
-                                <input type="text" name="messageContent" id="messageContent" class="form-control" placeholder="Type a message...">
-                                <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i></button>
+                                <input type="hidden" name="conversationId" id="conversationId" />
+                                <input type="text" name="messageContent" id="messageContent" class="form-control" disabled placeholder="Type a message...">
+                                <button type="submit" class="btn btn-primary" disabled><i class="bi bi-send"></i></button>
                             </div>
                         </form>
                     </div>
-                }
-                else
-                {
-                    <div class="p-5 text-center text-muted">
-                        <h4>Chọn một cuộc trò chuyện để bắt đầu</h4>
-                    </div>
-                }
+                
+                
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
     <script>
-        document.getElementById("sendMessageForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
+        window.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("sendMessageForm");
+            if (!form) return;
 
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
 
-            const messageContent = document.getElementById("messageContent").value.trim();
-            const conversationId = document.getElementById("conversationId").value;
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const messageContent = document.getElementById("messageContent").value.trim();
+                const conversationId = document.getElementById("conversationId").value;
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                const token = tokenInput?.value;
 
-            if (!messageContent) return;
+                if (!messageContent || !token) return;
 
-            const response = await fetch("?handler=AjaxSendMessage", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "RequestVerificationToken": token
-                },
-                body: JSON.stringify({ conversationId: conversationId, messageContent: messageContent })
+                const response = await fetch("?handler=AjaxSendMessage", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": token
+                    },
+                    body: JSON.stringify({ conversationId, messageContent })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const container = document.querySelector(".chat-messages");
+                    const msgDiv = document.createElement("div");
+                    msgDiv.className = "message sent";
+                    msgDiv.innerHTML = `
+                            <div class="message-content">
+                                <p>${messageContent}</p>
+                                <small class="text-muted">${result.sentAt}</small>
+                            </div>`;
+                    container.appendChild(msgDiv);
+                    container.scrollTop = container.scrollHeight;
+
+                    document.getElementById("messageContent").value = "";
+                }
             });
+        });
+    </script>
+    <script>
 
-            const result = await response.json();
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.innerText = text;
+            return div.innerHTML;
+        }
+        function enableMessageForm(conversationId) {
+            document.getElementById("conversationId").value = conversationId;
+            document.getElementById("messageContent").disabled = false;
+            document.querySelector("#sendMessageForm button[type='submit']").disabled = false;
+        }
 
-            if (result.success) {
-                const container = document.querySelector(".chat-messages");
-                const msgDiv = document.createElement("div");
-                msgDiv.className = "message sent";
-                msgDiv.innerHTML = `
-                    <div class="message-content">
-                        <p>${messageContent}</p>
-                        <small class="text-muted">${result.sentAt}</small>
-                    </div>`;
-                container.appendChild(msgDiv);
-                container.scrollTop = container.scrollHeight;
+        async function openConversation(conversationId) {
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-                document.getElementById("messageContent").value = "";
+                const response = await fetch("?handler=OpenConversation", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": token
+                    },
+                    body: JSON.stringify({ conversationId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const nameEl = document.getElementById("chatPartnerName");
+                    const messagesContainer = document.getElementById("chatMessages");
+
+                    if (nameEl && messagesContainer) {
+                        nameEl.innerText = result.conversation.fullname;
+                        messagesContainer.innerHTML = "";
+
+                        result.messages.forEach(msg => {
+                            const div = document.createElement("div");
+                            div.className = "message " + (msg.isSent ? "sent" : "received");
+                            div.innerHTML = `
+                                    <div class="message-content">
+                                        <p>${msg.content}</p>
+                                        <small class="text-muted">${msg.sentAt}</small>
+                                    </div>`;
+                            messagesContainer.appendChild(div);
+                        });
+
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        document.getElementById("conversationId").value = result.conversation.id;
+                    }
+                    enableMessageForm(conversationId);
+                } else {
+                    console.error("Server returned failure");
+                }
+            } 
+            catch (e) {
+                console.error("Error loading conversation", e);
             }
+            
+        }
+    </script>
+
+    <script>
+        window.addEventListener("message", async function (event) {
+            try {
+                const conversationId = event.data.conversationId;
+
+                if (!conversationId) return;
+
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                const response = await fetch("?handler=OpenConversation", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": token
+                    },
+                    body: JSON.stringify({ conversationId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const nameEl = document.getElementById("chatPartnerName");
+                    const messagesContainer = document.getElementById("chatMessages");
+
+                    if (nameEl && messagesContainer) {
+                        nameEl.innerText = result.conversation.fullname;
+                        messagesContainer.innerHTML = "";
+
+                        result.messages.forEach(msg => {
+                            const div = document.createElement("div");
+                            div.className = "message " + (msg.isSent ? "sent" : "received");
+                            div.innerHTML = `
+                                            <div class="message-content">
+                                                <p>${msg.content}</p>
+                                                <small class="text-muted">${msg.sentAt}</small>
+                                            </div>`;
+                            messagesContainer.appendChild(div);
+                        });
+
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        document.getElementById("conversationId").value = result.conversation.id;
+                    }
+                } else {
+                    console.error("Server returned failure");
+                }
+            } 
+            catch (e) {
+                console.log(e);
+            }
+            
+        });
+    </script>
+    <script>
+        document.getElementById("searchInput").addEventListener("input", function () {
+            const keyword = this.value.toLowerCase();
+            const items = document.querySelectorAll(".conversation-wrapper");
+
+            items.forEach(item => {
+                const name = item.getAttribute("data-name");
+                if (name.includes(keyword)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
         });
     </script>
 </body>

@@ -57,10 +57,7 @@
                                 <td>@rental.UserId</td>
                                 <td>@rental.Location</td>
                                 <td>@(rental.Approval ? "Đã duyệt" : "Chưa duyệt")</td>
-                                <td>
-                                    <a asp-page="/Admin/Rentals/Edit" asp-route-id="@rental.RentalId">Edit</a>
-                                    <a asp-page="/Admin/Rentals/Delete" asp-route-id="@rental.RentalId">Delete</a>
-                                </td>
+                                
                             </tr>
                         }
                     }

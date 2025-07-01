@@ -7,8 +7,10 @@ namespace Dotel2.Repository.Conversation
     {
         void createNewConvesation(Conversations conversation);
         ConversationDTO getConversationByUserId(int userIdFrom, int userIdTo);
-        ConversationDTO GetConversation(int conversationId, int currentUserId);
-        List<ConversationDTO> getConversationsByUserId(int userId);
-        ConversationDTO getOrCreateConversation(int currUserId, int targetUserId);
+        Task<ConversationDTO> GetConversation(int conversationId, int currentUserId);
+        Task<List<ConversationDTO>> getConversationsByUserId(int userId);
+        Task<ConversationDTO> getOrCreateConversation(int currUserId, int targetUserId);
+
+        public Task UpdateReadTime(int conversationId, int userId);
     }
 }

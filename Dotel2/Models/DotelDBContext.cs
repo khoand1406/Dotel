@@ -36,7 +36,9 @@ namespace Dotel2.Models
 
         public DbSet<Review> Reviews { get; set; }
 
-        
+        public DbSet<ChatHistory> ChatHistories { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Admin>(entity =>

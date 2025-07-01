@@ -5,6 +5,6 @@ namespace Dotel2.Service.Chat
 {
     public interface IChatService
     {
-        ConversationDTO GetOrCreateConversation(int currentUserId, int targetUserId);
+        Task<ConversationDTO> GetOrCreateConversation(int currentUserId, int targetUserId);
     }
 }

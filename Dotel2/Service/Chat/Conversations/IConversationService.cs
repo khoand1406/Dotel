@@ -6,8 +6,10 @@ namespace Dotel2.Service.Chat.Conversations
     {
         void CreateNewConversation(Models.Conversations conversation);
         ConversationDTO GetConversationByUserId(int userIdFrom, int userIdTo);
-        ConversationDTO GetConversation(int conversationId, int currentUserId);
-        List<ConversationDTO> GetConversationsByUserId(int userId);
-        ConversationDTO GetOrCreateConversation(int currUserId, int targetUserId);
+        Task<ConversationDTO> GetConversation(int conversationId, int currentUserId);
+        Task<List<ConversationDTO>> GetConversationsByUserId(int userId);
+        Task<ConversationDTO> GetOrCreateConversation(int currUserId, int targetUserId);
+
+        public Task UpdateReadTime(int conversationId, int userId);
     }
 }

@@ -8,6 +8,8 @@
 
         public List<Models.Message> getMessagesByConversationId(int conversationId);
 
+        public int getUnreadMessageCount(int userId);
+
         
     }
 }
