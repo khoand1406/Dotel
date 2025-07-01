@@ -43,3 +43,4 @@ namespace Dotel2.Pages.Admin.Rentals
             return RedirectToPage("/Admin/Rentals/Index");
         }
     }
+}

@@ -6,7 +6,7 @@ namespace Dotel2.Service.Admin.Rental
     {
         public EditRentalModel? getRentalEdit(int id);
 
-        public void deleteRental(int id);
+        public bool deleteRental(int id);
 
         public bool UpdateRental(EditRentalModel model);
     }
