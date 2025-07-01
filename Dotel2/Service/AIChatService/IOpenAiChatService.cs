@@ -7,5 +7,7 @@ namespace Dotel2.Service.AIChatService
         Task<string> AskAsync(string message, int? userId, string? sessionId);
 
         Task<List<ChatHistory>> GetChatHistoryAsync(int? userId, string? sessionId);
+
+        Task<bool> hasHistory(int userId);
     }
 }

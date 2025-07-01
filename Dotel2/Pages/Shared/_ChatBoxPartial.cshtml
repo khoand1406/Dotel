@@ -36,14 +36,26 @@
         chatBody.innerHTML = "<div class='text-center text-muted'>Đang tải...</div>";
         try {
             const res = await fetch("/api/chat/history");
-            const history = await res.json();
+            const result = await res.json();
+
             chatBody.innerHTML = "";
-            if (history.length != 0) {
-                history.forEach(msg => {
+
+            if (result.hasHistory) {
+                result.messages.forEach(msg => {
                     const align = msg.sender === "user" ? "end" : "start";
                     const badge = msg.sender === "user" ? "light text-dark" : "secondary text-white";
                     appendMessage(msg.sender === "user" ? "Bạn" : "GPT", msg.message, align, badge);
                 });
+            } else {
+                chatBody.innerHTML = `
+                    <div class="alert alert-info text-center mt-4">
+                        <p><strong>Chào bạn! 👋</strong> </p>
+                        <p>Dưới đây là một số gợi ý bạn có thể thử:</p>
+                        <ul class="list-unstyled mt-3">
+                                <li>• 💬 “Có phòng nào dưới 2 triệu không?”</li>
+                                    <li>• 📅 “Tìm trọ Cầu Giấy”</li>
+                        </ul>
+                    </div>`;
             }
         } catch (e) {
             chatBody.innerHTML = "<div class='text-danger text-center'>Không tải được lịch sử</div>";

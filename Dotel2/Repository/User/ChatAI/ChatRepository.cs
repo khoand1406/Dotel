@@ -38,9 +38,9 @@ namespace Dotel2.Repository.User.ChatAI
         .ToListAsync();
         }
 
-        public bool hasChatHistory(int userId)
+        public async Task<bool> hasChatHistory(int userId)
         {
-            return _dbContext.Users.FirstOrDefault(user=> user.UserId==userId).ChatHistories!=null;
+            return await _dbContext.ChatHistories.FirstOrDefaultAsync(c => c.UserId == userId)==null;
         }
     }
 }

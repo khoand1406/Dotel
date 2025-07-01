@@ -4,7 +4,7 @@ namespace Dotel2.Repository.User.ChatAI
 {
     public interface IChatRepository
     {
-        public bool hasChatHistory(int userId);
+        public Task<bool> hasChatHistory(int userId);
 
         public Task<bool> createChatAsync(int? userId, ChatHistory chat);
 
