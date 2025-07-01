@@ -2,8 +2,7 @@
 
 **Dotel** is a multifunctional web management system built on **ASP.NET Core Razor Pages**. The project offers comprehensive features such as user management, real-time messaging, membership subscriptions, email notification service, and role-based access control. It's suitable for platforms involving content management, rental services, ticket booking, or customer service.
 
-
-Demo: dotel-bvf5gwccf4dgf4f3.southeastasia-01.azurewebsites.net
+> 🔗 **Live Demo:** [https://dotel-bvf5gwccf4dgf4f3.southeastasia-01.azurewebsites.net](https://dotel-bvf5gwccf4dgf4f3.southeastasia-01.azurewebsites.net)
 ---
 
 ## ⚙️ Technologies Used
