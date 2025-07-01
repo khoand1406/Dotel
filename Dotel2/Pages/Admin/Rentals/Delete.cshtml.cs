@@ -4,44 +4,47 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-public class DeleteModel : PageModel
+namespace Dotel2.Pages.Admin.Rentals
 {
-    private readonly AdminRentalService _rentalService;
-
-    public DeleteModel(AdminRentalService rentalService)
+    public class DeleteModel : PageModel
     {
-        _rentalService = rentalService;
-    }
+        private readonly AdminRentalService _rentalService;
 
-    public class DeleteRentalModel
-    {
-        public int id;
-    }
+        public DeleteModel(AdminRentalService rentalService)
+        {
+            _rentalService = rentalService;
+        }
 
-    public DeleteRentalModel deleteRental { get; set; }
+        public class DeleteRentalModel
+        {
+            public int id;
+        }
 
-    public IActionResult OnGet(int id)
-    {
-        string userJson = HttpContext.Session.GetString("userJson");
-        if (string.IsNullOrEmpty(userJson)) return RedirectToPage("/Login/index");
+        public DeleteRentalModel deleteRental { get; set; }
 
-        var user = JsonConvert.DeserializeObject<User>(userJson);
-        if (user.RoleId != 1) return RedirectToPage("/Login/index");
+        public IActionResult OnGet(int id)
+        {
+            string userJson = HttpContext.Session.GetString("userJson");
+            if (string.IsNullOrEmpty(userJson)) return RedirectToPage("/Login/index");
 
-        var rental = _rentalService.getRentalEdit(id);
-        if (rental == null) return NotFound();
+            var user = JsonConvert.DeserializeObject<User>(userJson);
+            if (user.RoleId != 1) return RedirectToPage("/Login/index");
 
-        deleteRental = new DeleteRentalModel { id = rental.RentalId };
-        return Page();
-    }
+            var rental = _rentalService.getRentalEdit(id);
+            if (rental == null) return NotFound();
 
-    public IActionResult OnPost(int id)
-    {
-        if (!ModelState.IsValid) return Page();
+            deleteRental = new DeleteRentalModel { id = rental.RentalId };
+            return Page();
+        }
 
-        var success = _rentalService.deleteRental(id);
-        if (!success) return NotFound();
+        public IActionResult OnPost(int id)
+        {
+            if (!ModelState.IsValid) return Page();
 
-        return RedirectToPage("./Index");
+            var success = _rentalService.deleteRental(id);
+            if (!success) return NotFound();
+
+            return RedirectToPage("./Index");
+        }
     }
 }
