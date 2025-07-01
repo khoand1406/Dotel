@@ -199,5 +199,25 @@ namespace EXE_Dotel.Repository.Rental
             }
             await dBContext.SaveChangesAsync();
         }
+
+        public void UpdateRental(Dotel2.Models.Rental rental)
+        {
+            dBContext.Rentals.Update(rental);
+        }
+
+        public void Save()
+        {
+            dBContext.SaveChanges();
+        }
+
+        public void deleteRental(int rentalId)
+        {
+            var rental= dBContext.Rentals.FirstOrDefault(rental=> rental.RentalId == rentalId);
+            if(rental != null)
+            {
+                dBContext.Rentals.Remove(rental);
+            }
+            
+        }
     }
 }

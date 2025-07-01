@@ -6,6 +6,8 @@ using Dotel2.Repository.Rental;
 using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
 using Dotel2.Repository.User.ChatAI;
+using Dotel2.Service.Admin.Auth;
+using Dotel2.Service.Admin.Rental;
 using Dotel2.Service.AIChatService;
 using Dotel2.Service.Chat;
 using Dotel2.Service.Chat.Conversations;
@@ -28,14 +30,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<DotelDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 builder.Services.AddSession();
+
 builder.Services.AddScoped<IRentalRepository, RentalRepostiory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRespository>();
 builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
-builder.Services.AddScoped<IOpenAiChatService, OpenAIChatService>();
-
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 builder.Services.AddScoped<ILoginService,  LoginService>();
@@ -47,9 +48,11 @@ builder.Services.AddScoped<IRentalService,  RentalService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IConversationService, ConversationServices>();
 builder.Services.AddScoped<iMessageService, MessageService>();
-
 builder.Services.AddScoped<ISendMailService, SendMailService>();
+builder.Services.AddScoped<IOpenAiChatService, OpenAIChatService>();
 
+builder.Services.AddScoped<IAdminAuthService,  AdminAuthService>();
+builder.Services.AddScoped<IAdmiinRentalService, AdminRentalService>();
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();

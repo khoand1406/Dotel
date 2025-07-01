@@ -2,6 +2,7 @@
 
 
 using Dotel2.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Dotel2.Repository.Rental
 {
@@ -13,8 +14,6 @@ namespace Dotel2.Repository.Rental
 
         public Dotel2.Models.Rental GetRental(int id);
         public List<Dotel2.Models.Rental> GetRentals();
-
-        //public List<EXE_Dotel.Models.Rental> GetRentalByFilters();
 
         public List<Dotel2.Models.Rental> getRentalWithImage(int pagesize);
 
@@ -39,6 +38,12 @@ namespace Dotel2.Repository.Rental
             decimal? minSquare, decimal? minPrice, decimal? maxPrice);
 
         public List<String> getSuggestLocation(string query);
+
+        public void UpdateRental(Models.Rental rental);
+
+        public void deleteRental(int rentalId);
+
+        public void Save();
 
     }
 }

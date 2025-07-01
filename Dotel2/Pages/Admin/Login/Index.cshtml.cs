@@ -1,4 +1,5 @@
 ﻿using Dotel2.Models;
+using Dotel2.Service.Admin.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -9,11 +10,13 @@ namespace Dotel2.Pages.Admin.Login
 {
     public class IndexModel : PageModel
     {
-        private readonly DotelDBContext _context;
-        public IndexModel(DotelDBContext context)
+        private readonly IAdminAuthService _authService;
+
+        public IndexModel(IAdminAuthService authService)
         {
-            _context = context;
+            _authService = authService;
         }
+
         [BindProperty] public string email { get; set; }
         [BindProperty] public string password { get; set; }
 
@@ -21,61 +24,19 @@ namespace Dotel2.Pages.Admin.Login
         {
             HttpContext.Session.Clear();
         }
+
         public IActionResult OnPost()
         {
-            if (LoginSuccessful())
+            if (_authService.Authenticate(email, password, out var user, out string message))
             {
+                string userJson = JsonConvert.SerializeObject(user);
+                HttpContext.Session.SetString("userJson", userJson);
                 return RedirectToPage("/Admin/Index");
             }
-            else
-            {
-                TempData["ErrorMessage"] = "Tài khoản hoặc mật khẩu không đúng.";
-                return Page();
-            }
-        }
 
-        public bool LoginSuccessful()
-        {
-            var hashedPassword = GetHashedPassword(password);
-            var user = _context.Users.FirstOrDefault(s => s.Email.Equals(email) && s.Password.Equals(hashedPassword));
-            if (user == null)
-            {
-                return false;
-            }
-            else
-            {
-                if (user.Status == false) // Deactived
-                {
-                    TempData["ErrorMessage"] = "Tài khoản đã bị khóa";
-                    return false;
-                }
-                else if (user.RoleId != 1) //Admin
-                {
-                    TempData["ErrorMessage"] = "Truy cập bị từ chối";
-                    return false;
-                }
-
-                //set session
-                string userJson = JsonConvert.SerializeObject(user);
-                /*                Console.WriteLine(userJson);*/
-                HttpContext.Session.SetString("userJson", userJson);
-
-                return true;
-            }
-        }
-
-        private string GetHashedPassword(string password)
-        {
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
+            TempData["ErrorMessage"] = message;
+            return Page();
         }
     }
 }
+
