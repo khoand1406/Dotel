@@ -7,7 +7,7 @@ namespace Dotel2.Repository.User
 {
     public class UserRepository : IUserRepository
     {
-        DotelDBContext context;
+        private readonly DotelDBContext context;
         public UserRepository(DotelDBContext dBContext) {
             this.context = dBContext;
         }
@@ -18,14 +18,42 @@ namespace Dotel2.Repository.User
                 .Any(ship => ship.UserId == user.UserId && ship.EndDate> DateTime.UtcNow );
         }
 
+        public Models.User? GetUserByEmail(string email)
+        {
+            return context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        public Models.User? GetUserByEmailAndPassword(string email, string hashedPassword)
+        {
+            return context.Users.FirstOrDefault(u =>
+            u.Email.ToLower() == email.ToLower() && u.Password == hashedPassword);
+        }
+
         public Models.User getUserbyRentalId(int uId)
         {
             return context.Users.FirstOrDefault(user => user.UserId == uId);
         }
 
-        public void SendMessage(Models.Message message, int senderId, int receiver)
+        public void RegisterUser(Models.User user)
         {
-            throw new NotImplementedException();
+            context.Users.Add(user);
+            context.SaveChanges();
+        }
+
+        public void UpdateUserPassword(string email, string hashedPassword)
+        {
+            var user = context.Users.FirstOrDefault(u => u.Email == email);
+            if (user != null)
+            {
+                user.Password = hashedPassword;
+                context.SaveChanges();
+            }
+        }
+
+        public void UpdateUserProfile(Models.User user)
+        {
+            context.Users.Update(user);
+            context.SaveChanges();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Service.Rental;
 using EXE_Dotel.Repository.Rental;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,14 +10,11 @@ namespace Dotel2.Pages
 {
     public class IndexModel : PageModel
     {
-
+        private readonly IRentalService _service;
         
-        private readonly IRentalRepository rentalRepository;
-        private readonly DotelDBContext _context;
-        public IndexModel(IRentalRepository repository, DotelDBContext context)
+        public IndexModel(IRentalService service)
         {
-            rentalRepository = repository;
-            _context = context;
+           _service= service;
         }
         public bool IsLoggedIn { get; private set; }
         public List<Rental> rentals { get; private set; }
@@ -56,29 +54,29 @@ namespace Dotel2.Pages
 
             IsLoggedIn = !string.IsNullOrEmpty(userJson);
 
-            rentals = rentalRepository.getRentalWithImage(pagesize);
+            rentals = _service.getRentalWithImage(pagesize);
             
             
             
             foreach (var r in rentals)
             {
                 SessionValue = HttpContext.Session.GetString("UserSession");
-                var curListImg = rentalRepository.getRentalWithListImages(r.RentalId);
-                //images[r.RentalId] = curListImg;
+                var curListImg = _service.getRentalWithListImages(r.RentalId);
+                
 
             }
             ViewData["CntPost"] = rentals.Count;
-/*            ViewData["CntUser"] = _context.Users.ToList().Count;*/
+
         }
         public IActionResult OnPostIncrementViewCount(int rentalId)
         {
-            var rental = rentalRepository.GetRental(rentalId);
+            var rental = _service.GetRental(rentalId);
            
 
 
             if (rental != null)
             {
-                rentalRepository.getViewCountIncrease(rental);
+                _service.getViewCountIncrease(rental);
                 
                 return RedirectToPage("RentHomeDetails", new { id = rentalId });
             }

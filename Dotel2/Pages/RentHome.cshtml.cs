@@ -1,5 +1,6 @@
 using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Service.Rental;
 using EXE_Dotel.Repository.Rental;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,12 +11,11 @@ namespace Dotel2.Pages
 {
     public class RentHomeModel : PageModel
     {
-        private readonly IRentalRepository repository;
+        private readonly IRentalService _service;
 
-        public RentHomeModel(IRentalRepository repo)
+        public RentHomeModel(IRentalService service)
         {
-            repository = repo;
-
+            _service = service;
         }
         public List<Rental> Rentals { get; set; }
         public int Total { get; private set; }
@@ -59,20 +59,20 @@ namespace Dotel2.Pages
             //
             Console.WriteLine($"Current Page: {CurrentPage}");
 
-            FilteredRenter = repository.getFilterRentalPaging(Location,Type, MaxArea, MinArea, MinPrice, MaxPrice);
-            Total = repository.getListRentalsCount(FilteredRenter);
+            FilteredRenter = _service.getFilterRentalPaging(Location,Type, MaxArea, MinArea, MinPrice, MaxPrice);
+            Total = _service.getListRentalsCount(FilteredRenter);
             TotalPages = (int)Math.Ceiling(Total / (double)PageSize);
-            FilteredRenter = repository.getRentersPaging(FilteredRenter, CurrentPage, PageSize);
+            FilteredRenter = _service.getRentersPaging(FilteredRenter, CurrentPage, PageSize);
 
 
         }
 
         public IActionResult OnPostIncrementViewCount(int rentalId)
         {
-            var rental = repository.GetRental(rentalId);
+            var rental = _service.GetRental(rentalId);
             if (rental != null)
             {
-                repository.getViewCountIncrease(rental);
+                _service.getViewCountIncrease(rental);
                 
                 return RedirectToPage("RentHomeDetails", new { id = rentalId });
             }

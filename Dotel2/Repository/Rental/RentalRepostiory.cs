@@ -179,5 +179,25 @@ namespace EXE_Dotel.Repository.Rental
             
 
         }
+
+        public async Task<int> AddRentalAsync(Dotel2.Models.Rental rental)
+        {
+            dBContext.Rentals.Add(rental);
+            await dBContext.SaveChangesAsync();
+            return rental.RentalId;
+        }
+
+        public async Task AddImagesAsync(int rentalId, List<string> imagePaths)
+        {
+            foreach (var path in imagePaths)
+            {
+                dBContext.RentalListImages.Add(new RentalListImage
+                {
+                    RentalId = rentalId,
+                    Sourse = path
+                });
+            }
+            await dBContext.SaveChangesAsync();
+        }
     }
 }

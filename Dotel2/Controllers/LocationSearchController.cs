@@ -1,5 +1,6 @@
 ﻿using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Service.Rental;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dotel2.Controllers
@@ -8,13 +9,11 @@ namespace Dotel2.Controllers
     [ApiController]
     public class LocationSearchController : ControllerBase
     {
-        private readonly DotelDBContext _dbContext;
-        private IRentalRepository rentalRepository;
+        private IRentalService _rentalService;
 
-        public LocationSearchController(DotelDBContext dbContext, IRentalRepository repository)
+        public LocationSearchController(IRentalService service)
         {
-            _dbContext = dbContext;
-            rentalRepository = repository;
+            _rentalService = service;
         }
 
         [HttpGet]
@@ -23,7 +22,7 @@ namespace Dotel2.Controllers
             {
                 return Ok(new List<String>());
             }
-            var suggestions= rentalRepository.getSuggestLocation(query);
+            var suggestions= _rentalService.getSuggestLocation(query);
             if(suggestions!=null)
             {
                 return Ok(suggestions);

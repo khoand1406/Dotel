@@ -9,7 +9,14 @@ using Dotel2.Repository.User.ChatAI;
 using Dotel2.Service.AIChatService;
 using Dotel2.Service.Chat;
 using Dotel2.Service.Chat.Conversations;
+using Dotel2.Service.Chat.Messages;
 using Dotel2.Service.Mail;
+using Dotel2.Service.Rental;
+using Dotel2.Service.User.EmailVerfification;
+using Dotel2.Service.User.Login;
+using Dotel2.Service.User.Profile;
+using Dotel2.Service.User.Register;
+using Dotel2.Service.User.ResetPassword;
 using Dotel2.SignalR;
 using EXE_Dotel.Repository.Rental;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +35,18 @@ builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IOpenAiChatService, OpenAIChatService>();
+
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
+builder.Services.AddScoped<ILoginService,  LoginService>();
+builder.Services.AddScoped<IRegisterService, RegisterService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IEmailVerificationService,  EmailVerificationService>();
+builder.Services.AddScoped<IResetPasswordService, ResetPasswordService>();
+builder.Services.AddScoped<IRentalService,  RentalService>();   
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IConversationService, ConversationServices>();
+builder.Services.AddScoped<iMessageService, MessageService>();
 
 builder.Services.AddScoped<ISendMailService, SendMailService>();
 

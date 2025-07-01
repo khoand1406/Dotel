@@ -10,22 +10,17 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using Dotel2.Service.Rental;
 
 namespace Dotel2.Pages.FormRentHome
 {
     public class IndexModel : PageModel
     {
-        private readonly DotelDBContext _context;
-        private readonly string _uploadDirectory = "wwwroot/uploads";
-        
-        public IndexModel(DotelDBContext context)
+        private readonly IRentalService _rentalService;
+
+        public IndexModel(IRentalService rentalService)
         {
-            _context = context;
-            
-            if (!Directory.Exists(_uploadDirectory))
-            {
-                Directory.CreateDirectory(_uploadDirectory);
-            }
+            _rentalService = rentalService;
         }
 
         [BindProperty] public string Title { get; set; }
@@ -41,108 +36,56 @@ namespace Dotel2.Pages.FormRentHome
         [BindProperty] public int Bedrooms { get; set; }
         [BindProperty] public List<IFormFile> MediaFiles { get; set; }
 
-        public ActionResult OnGet()
+        public IActionResult OnGet()
         {
             var userJson = HttpContext.Session.GetString("userJson");
             if (string.IsNullOrEmpty(userJson))
             {
-                return RedirectToPage("/Login/index");
+                return RedirectToPage("/Login/Index");
             }
             return Page();
         }
 
-        public ActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             var userJson = HttpContext.Session.GetString("userJson");
             if (string.IsNullOrEmpty(userJson))
             {
-                return RedirectToPage("/login");
+                return RedirectToPage("/Login/Index");
             }
+
             var user = JsonConvert.DeserializeObject<User>(userJson);
 
-
-            // Validate số điện thoại theo Regular Expression
-            if (!Regex.IsMatch(Phone, @"^0\d{9}$"))
+            if (!_rentalService.IsPhoneValid(Phone))
             {
                 TempData["ErrorMessage"] = "Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng.";
                 return Page();
             }
 
-            Console.WriteLine(Kitchen);
-            Console.WriteLine(Bathroom);
             var rental = new Rental
             {
                 UserId = user.UserId,
                 RentalTitle = Title,
                 Price = Price,
                 RoomArea = Area,
-                Description = FormatDescriptionForSave(Description),
-                ContactPhoneNumber = Phone.ToString(),
                 Location = Address,
+                Description = Description,
                 Type = TypeRoom,
                 MaxPeople = NumberP,
                 Kitchen = Kitchen,
                 Bathroom = Bathroom,
                 BedroomNumber = Bedrooms,
+                ContactPhoneNumber = Phone,
                 Status = true,
                 Approval = false,
                 ViewNumber = 0,
             };
-            _context.Rentals.Add(rental);
-            _context.SaveChanges();
 
-
-            var rentalId = rental.RentalId;
-
-            var imagePaths = new List<string>();
-
-            var rentalDirectory = Path.Combine(_uploadDirectory, rentalId.ToString());
-            var imageDirectory = Path.Combine(rentalDirectory, "img");
-
-            if (!Directory.Exists(imageDirectory))
-            {
-                Directory.CreateDirectory(imageDirectory);
-            }
-
-            int imageCount = 1;
-
-            foreach (var file in MediaFiles)
-            {
-                if (file.Length > 0 && file.ContentType.StartsWith("image/"))
-                {
-                    string newFileName = $"{imageCount++}{Path.GetExtension(file.FileName)}";
-                    string filePath = Path.Combine(imageDirectory, newFileName);
-                    imagePaths.Add(Path.Combine("uploads", rentalId.ToString(), "img", newFileName));
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        using (var image = Image.Load(file.OpenReadStream()))
-                        {
-                            var encoder = new JpegEncoder { Quality = 75 }; // Set chất lượng ảnh, giá trị từ 1-100
-                            image.Save(stream, encoder);
-                        }
-                    }
-                }
-            }
-
-            // Lưu đường dẫn ảnh vào cơ sở dữ liệu
-            foreach (var imagePath in imagePaths)
-            {
-                rental.RentalListImages.Add(new RentalListImage { RentalId = rentalId, Sourse = imagePath });
-            }
-
-            _context.SaveChanges();
-
+            await _rentalService.CreateRentalAsync(rental, MediaFiles);
             return RedirectToPage("/Index");
         }
-        public static string FormatDescriptionForSave(string description)
-        {
-            if (string.IsNullOrEmpty(description))
-                return description;
-
-            return description.Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>");
-        }
     }
+
 
 
 }

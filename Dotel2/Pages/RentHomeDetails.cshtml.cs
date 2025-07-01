@@ -5,6 +5,7 @@ using Dotel2.Repository.Reviews;
 using Dotel2.Repository.User;
 using Dotel2.Service.Chat;
 using Dotel2.Service.Chat.Conversations;
+using Dotel2.Service.Rental;
 using Dotel2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,14 +16,14 @@ namespace Dotel2.Pages
 {
     public class RentHomeDetailsModel : PageModel
     {
-        private readonly IRentalRepository repository;
+        private readonly IRentalService _service;
         
         private readonly IReviewRepository reviewRepository;
 
         private readonly IChatService _chatService;
-        public RentHomeDetailsModel(IChatService chatService, IRentalRepository repo,IReviewRepository reviewRepo)
+        public RentHomeDetailsModel(IChatService chatService, IRentalService service,IReviewRepository reviewRepo)
         {
-            repository = repo;
+            _service= service;
             
             this.reviewRepository = reviewRepo;
 
@@ -42,11 +43,11 @@ namespace Dotel2.Pages
 
         public IActionResult OnGet(int Id)
         {
-            //Thanh
+           
             var userSession = HttpContext.Session.GetString("userJson");
             userSessionTime = userSession;
-            //
-            Rental = repository.GetRental(Id);
+            
+            Rental = _service.GetRental(Id);
 
             if (!string.IsNullOrEmpty(Rental.Description))
             {
@@ -123,7 +124,7 @@ namespace Dotel2.Pages
 
             if (userId == null) return BadRequest();
             var conversationDto = await _chatService.GetOrCreateConversation(userId.Value, targetUserId);
-            Console.WriteLine("aaaaaaa"+ conversationDto);
+            
             if (conversationDto != null)
             {
                 HttpContext.Session.SetInt32("ActiveConversationId", conversationDto.Id);

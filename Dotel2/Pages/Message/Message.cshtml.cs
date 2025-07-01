@@ -4,6 +4,7 @@ using Dotel2.Repository.Conversation;
 using Dotel2.Repository.Message;
 using Dotel2.Repository.User;
 using Dotel2.Service.Chat.Conversations;
+using Dotel2.Service.Chat.Messages;
 using Dotel2.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,13 +16,13 @@ namespace Dotel2.Pages.Message
     public class MessageModel : PageModel
     {
         private readonly IConversationService _conversationService;
-        private readonly IMessageRepository messageRepository;
+        private readonly iMessageService _messageService;
         
         private readonly IHubContext<MessageHub> _hubContext;
-        public MessageModel(IConversationService conversationService, IMessageRepository repository, IHubContext<MessageHub> hubContext)
+        public MessageModel(IConversationService conversationService, iMessageService service, IHubContext<MessageHub> hubContext)
         {
             _conversationService = conversationService;
-            this.messageRepository = repository;
+            _messageService= service;
             _hubContext = hubContext;
         }
 
@@ -48,7 +49,7 @@ namespace Dotel2.Pages.Message
             else
             {
                 ActiveConversation = await _conversationService.GetConversation(conversationId.Value, CurrentUser.UserId);
-                Messages = messageRepository.getMessagesByConversationId(conversationId.Value);
+                Messages = _messageService.getMessagesByConversationId(conversationId.Value);
             }
 
             return Page();
@@ -73,7 +74,7 @@ namespace Dotel2.Pages.Message
             };
 
             // Lưu tin nhắn vào DB
-            messageRepository.SendMessage(message);
+            _messageService.SendMessage(message);
 
             // Lấy thông tin user còn lại trong conversation
             var conversation = _conversationService.GetConversation(ConversationId, CurrentUser.UserId).Result;
@@ -92,7 +93,7 @@ namespace Dotel2.Pages.Message
             // Load lại data để render giao diện
             ActiveConversation = conversation;
             Conversations = _conversationService.GetConversationsByUserId(CurrentUser.UserId).Result;
-            Messages = messageRepository.getMessagesByConversationId(ConversationId);
+            Messages = _messageService.getMessagesByConversationId(ConversationId);
 
             return RedirectToPage(new { ConversationId });
         }
@@ -118,7 +119,7 @@ namespace Dotel2.Pages.Message
                 ? ActiveConversation.User2
                 : ActiveConversation.User1;
 
-            Messages = messageRepository.getMessagesByConversationId(conversationId);
+            Messages = _messageService.getMessagesByConversationId(conversationId);
 
             var messages = Messages.Select(m => new
             {
@@ -162,7 +163,7 @@ namespace Dotel2.Pages.Message
                 ConversationId = input.ConversationId,
             };
 
-            messageRepository.SendMessage(message);
+            _messageService.SendMessage(message);
 
             
             var conv = _conversationService.GetConversation(input.ConversationId, CurrentUser.UserId).Result;

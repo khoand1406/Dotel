@@ -2,6 +2,7 @@
 using Dotel2.Models;
 using Dotel2.Repository.Rental;
 using Dotel2.Repository.User;
+using Dotel2.Service.User.Profile;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -10,12 +11,10 @@ namespace Dotel2.Pages.Profile
 {
     public class IndexModel : PageModel
     {
-        private readonly IUserRepository userRepository;
-        private readonly DotelDBContext dbContext;
-        public IndexModel( IUserRepository userRepository, DotelDBContext dbContext)
+        private readonly IUserProfileService _userProfileService;
+        public IndexModel( IUserProfileService userProfileService)
         {
-            this.userRepository = userRepository;
-            this.dbContext = dbContext;
+            _userProfileService = userProfileService;
         }
         [BindProperty(SupportsGet = true)]
         public User user { get; set; }
@@ -40,21 +39,24 @@ namespace Dotel2.Pages.Profile
                 return RedirectToPage("/Login/index");
             }
 
-            user = userRepository.getUserbyRentalId(Id);
+            user = _userProfileService.getUserById(Id);
             return Page();
 
         }
 
         public IActionResult OnPost(int Id)
         {
-            user = userRepository.getUserbyRentalId(Id);
-            user.Email = Email;
-            user.Fullname = Fullname;
-            user.MainPhoneNumber = MainPhoneNumber;
-            user.SecondaryPhoneNumber = SecondaryPhoneNumber;
-            dbContext.Update(user);
-            dbContext.SaveChanges();
-            return RedirectToPage();
+            string error;
+            var success = _userProfileService.UpdateUserProfile(Id, Fullname, MainPhoneNumber, SecondaryPhoneNumber, Email, out error);
+
+            if (!success)
+            {
+                TempData["ErrorMessage"] = error;
+                return Page();
+            }
+
+            TempData["SuccessMessage"] = "Cập nhật thông tin thành công.";
+            return RedirectToPage(new { Id= Id});
         }
     }
 }

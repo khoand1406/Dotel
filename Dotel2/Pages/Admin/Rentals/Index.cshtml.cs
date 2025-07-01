@@ -1,5 +1,6 @@
 using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Service.Rental;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -8,12 +9,10 @@ namespace Dotel2.Pages.Admin.Rentals
 {
     public class RentalModel : PageModel
     {
-        private readonly DotelDBContext _context;
-        private readonly IRentalRepository _rentalRepository;
-        public RentalModel (DotelDBContext context, IRentalRepository rentalRepository)
-        {
-            _context = context;
-            _rentalRepository = rentalRepository;
+        private readonly IRentalService _service;
+        public RentalModel (IRentalService service)
+        {           
+            _service= service;
         }
         
         [BindProperty]
@@ -35,13 +34,13 @@ namespace Dotel2.Pages.Admin.Rentals
                     return RedirectToPage("/Login/index");
                 }
             }
-            Rentals = _rentalRepository.GetRentals().Where(r => r.Approval).ToList();
+            Rentals = _service.GetRentals().Where(r => r.Approval).ToList();
             ApprovedOnly = true;
             return Page();
         }
         public void OnPost()
         {
-            Rentals = _rentalRepository.GetRentals();
+            Rentals = _service.GetRentals();
             Rentals = Rentals.Where(r => r.Approval == ApprovedOnly).ToList();
         }
     }

@@ -59,8 +59,6 @@ namespace Dotel2.Pages.ForgotPassword
 
                 if (!success)
                 {
-                    
-                    // Log lỗi để debug
                     Console.WriteLine($"SendGrid failed: {body}");
                 }
 

@@ -1,4 +1,5 @@
-using Dotel2.Models;
+﻿using Dotel2.Models;
+using Dotel2.Service.User.ResetPassword;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -9,11 +10,11 @@ namespace Dotel2.Pages.Reset
 {
     public class IndexModel : PageModel
     {
-        private readonly DotelDBContext _context;
+        private readonly IResetPasswordService _resetService;
 
-        public IndexModel(DotelDBContext context)
+        public IndexModel(IResetPasswordService resetService)
         {
-            _context = context;
+            _resetService = resetService;
         }
 
         [BindProperty] public string Email { get; set; }
@@ -41,47 +42,34 @@ namespace Dotel2.Pages.Reset
         public IActionResult OnPost()
         {
             var forgot = HttpContext.Session.GetString("forgot");
-            var userVerification = HttpContext.Session.GetString("userVerification");
+            var userVerificationJson = HttpContext.Session.GetString("userVerification");
 
-            if (string.IsNullOrEmpty(userVerification))
+            if (string.IsNullOrEmpty(userVerificationJson))
             {
                 return forgot == "1"
                     ? RedirectToPage("/ForgotPassword/Index")
                     : RedirectToPage("/Login/Index");
             }
 
-            var userSession = JsonConvert.DeserializeObject<User>(userVerification);
-            Email = userSession?.Email;
+            var sessionUser = JsonConvert.DeserializeObject<User>(userVerificationJson);
+            Email = sessionUser?.Email;
 
-            if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepeatPassword))
+            var success = _resetService.ResetPassword(Email, Password, RepeatPassword, out string msg);
+
+            if (!success)
             {
-                TempData["ErrorMessage"] = "Password fields cannot be empty.";
+                TempData["ErrorMessage"] = msg;
                 return Page();
             }
 
-            if (!Password.Equals(RepeatPassword))
-            {
-                TempData["ErrorMessage"] = "Passwords do not match.";
-                return Page();
-            }
-
-            var emailExist = _context.Users.FirstOrDefault(s => s.Email.Equals(Email));
-            if (emailExist == null)
-            {
-                return RedirectToPage("/ForgotPassword/Index");
-            }
-
-            emailExist.Password = GetHashedPassword(Password);
-            _context.SaveChanges();
-
-            TempData["SuccessMessage"] = "Change password successfully.";
+            TempData["SuccessMessage"] = "Đổi mật khẩu thành công.";
             HttpContext.Session.Remove("userVerification");
             HttpContext.Session.Remove("forgot");
 
             return RedirectToPage("/Login/Index");
         }
 
-        private string GetHashedPassword(string password)
+            private string GetHashedPassword(string password)
         {
             using (var sha256 = SHA256.Create())
             {

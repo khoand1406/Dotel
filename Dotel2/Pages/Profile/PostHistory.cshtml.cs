@@ -1,5 +1,6 @@
 using Dotel2.Models;
 using Dotel2.Repository.Rental;
+using Dotel2.Service.Rental;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -8,13 +9,12 @@ namespace Dotel2.Pages.Profile
 {
     public class PostHistoryModel : PageModel
     {
-        private readonly DotelDBContext _context;
-        private readonly IRentalRepository _rentalRepository;
+        
+        private readonly IRentalService _service;
         public List<Rental> Rentals { get; set; }
-        public PostHistoryModel(DotelDBContext context, IRentalRepository rentalRepository)
+        public PostHistoryModel(IRentalService service)
         {
-            _context = context;
-            _rentalRepository = rentalRepository;
+            _service = service;
         }
         public IActionResult OnGet(int Id)
         {
@@ -29,7 +29,7 @@ namespace Dotel2.Pages.Profile
             {
                 return RedirectToPage("/Login/index");
             }
-            Rentals = _rentalRepository.GetRentals().Where(r => r.UserId == Id).ToList();
+            Rentals = _service.GetRentals().Where(r => r.UserId == Id).ToList();
             return Page();
         }
     }

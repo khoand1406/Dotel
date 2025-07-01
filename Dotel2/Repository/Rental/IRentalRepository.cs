@@ -7,8 +7,11 @@ namespace Dotel2.Repository.Rental
 {
     public interface IRentalRepository
     {
-        public Dotel2.Models.Rental GetRental(int id);
+        
+        Task<int> AddRentalAsync(Models.Rental rental);
+        Task AddImagesAsync(int rentalId, List<string> imagePaths);
 
+        public Dotel2.Models.Rental GetRental(int id);
         public List<Dotel2.Models.Rental> GetRentals();
 
         //public List<EXE_Dotel.Models.Rental> GetRentalByFilters();
